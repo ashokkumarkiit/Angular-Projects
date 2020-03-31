@@ -1,0 +1,9 @@
+<h2 class="content-padding-left">Exercises</h2>
+<mat-list class="content-padding">
+    <mat-list-item *ngFor="let exercise of exercises">
+            <a class="list-item-style" routerLink="/exercise/detail/{{exercise.id}}">
+                {{exercise.name}}
+            </a>
+            <mat-divider></mat-divider>
+    </mat-list-item>
+</mat-list>

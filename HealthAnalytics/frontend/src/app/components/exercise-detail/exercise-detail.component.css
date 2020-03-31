@@ -1,0 +1,31 @@
+.content-padding {
+    padding: 20px;
+}
+
+.table-width-full {
+    width: 100%;
+}
+
+.col-width-30 {
+    width:30%;
+}
+
+.col-width-60 {
+    width:60%;
+}
+
+.col-label {
+    padding: 15px;
+    font-weight: 500;
+}
+.muscle-background {
+    width: 180px;
+    height: 276px;
+    background-size: 150px;
+    background-repeat: no-repeat;
+}
+.center-block {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}

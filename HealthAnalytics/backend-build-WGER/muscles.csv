@@ -1,0 +1,16 @@
+id,name,is_front
+2,Anterior deltoid,True
+1,Biceps brachii,True
+11,Biceps femoris,False
+13,Brachialis,True
+7,Gastrocnemius,False
+8,Gluteus maximus,False
+12,Latissimus dorsi,False
+14,Obliquus externus abdominis,True
+4,Pectoralis major,True
+10,Quadriceps femoris,True
+6,Rectus abdominis,True
+3,Serratus anterior,True
+15,Soleus,False
+9,Trapezius,False
+5,Triceps brachii,False

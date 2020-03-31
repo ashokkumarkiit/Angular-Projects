@@ -1,0 +1,22 @@
+<mat-toolbar text-align=center (click)="callHomePage()">
+  <span> Exercise Hub - Health Analytics</span>
+  &nbsp; &nbsp; &nbsp;
+
+  <mat-icon >fitness_center</mat-icon>
+  <mat-icon >eco</mat-icon>
+  <mat-icon >bar_chart</mat-icon>
+
+
+  <span class="fill-remaining-space"></span>
+
+</mat-toolbar>
+
+
+<div>
+  <nav class="padding-20">
+    <a routerLink="/analytics" class="header-tab">Health Analytics</a>
+    <a routerLink="/search" class="header-tab">Search Portal</a>
+    <a routerLink="/workout" class="header-tab">Workout Portal</a>
+  </nav>
+  <router-outlet></router-outlet>
+</div>

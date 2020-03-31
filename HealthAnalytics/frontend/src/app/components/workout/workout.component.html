@@ -1,0 +1,11 @@
+<div class="grid-container-padding">
+  <h2>Exercise Categories</h2>
+  <a *ngFor="let category of exerciseCategory" class="col-1-4"
+        routerLink="/exercises/{{category.id}}"
+      >
+      <mat-card>
+          <mat-card-title>{{category.name}}</mat-card-title>
+          <img mat-card-image src="/assets/{{category.name}}.jpg" alt="{{category.name}}" />
+      </mat-card>
+  </a>
+</div>

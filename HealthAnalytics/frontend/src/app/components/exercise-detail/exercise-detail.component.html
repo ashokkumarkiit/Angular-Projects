@@ -1,0 +1,62 @@
+<div>
+  <div class="content-padding">
+      <mat-card>
+        <mat-card-title>
+          {{exercise_detail.name}}
+        </mat-card-title>
+        <mat-divider></mat-divider>
+        <table class="table-width-full">
+          <tr>
+            <td class="col-width-30 col-label">Category:-</td>
+            <td class="col-width-60">{{exercise_detail.ex_cat_name}}</td>
+          </tr>
+          <tr *ngIf="exercise_equipment?.length > 0">
+            <td class="col-width-30 col-label">Equipment:-</td>
+            <td class="col-width-60">
+                <ul>
+                    <li 
+                      *ngFor="let equipment of exercise_equipment">
+                      <span class="badge">
+                          {{equipment.name}}
+                      </span>
+                    </li>
+                </ul>
+            </td>
+          </tr>
+          <tr>
+            <td class="col-width-30 col-label">Description:-</td>
+            <td ng-bind-html class="col-width-60"><div [innerHTML]="exercise_detail.description"></div></td>
+          </tr>
+          <tr *ngIf="exercise_muscle?.length > 0">
+            <td class="col-width-30 col-label">Muscles:-</td>
+            <td class="col-width-60">
+                <ul>
+                    <li 
+                      *ngFor="let muscle of exercise_muscle">
+                      <span class="badge">
+                          {{muscle.name}}
+                      </span>
+                    </li>
+                </ul>
+                <table>
+                  <tr>
+                    <td class="col-width-30">
+                      <div class="muscle-background center-block" 
+                        [ngStyle]=front_muscle
+                      >
+                    </div>
+                    </td>
+                    <td>
+                      <div class="muscle-background center-block" 
+                        [ngStyle]=back_muscle
+                      >
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+            </td>
+          </tr>
+        </table>
+      </mat-card>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+.content-padding {
+  padding:20px;
+}
+.content-padding-left {
+  padding-left:20px;
+}
+
+.list-item-style {
+  text-decoration: none;
+  color: #333;
+}
