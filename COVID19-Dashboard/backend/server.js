@@ -1,90 +1,19 @@
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-
-
-/// This file and the source code provided can be used only for
-/// the projects and assignments of this course
-
-/// Last Edit by Dr. Atef Bader: 1/27/2019
-
-
-
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-//////////////////////              SETUP NEEDED                ////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-
-//  Install Nodejs (the bundle includes the npm) from the following website:
-//      https://nodejs.org/en/download/
-
-
-//  Before you start nodejs make sure you install from the
-//  command line window/terminal the following packages:
-//      1. npm install express
-//      2. npm install pg
-//      3. npm install pg-format
-//      4. npm install moment --save
-//      5. npm install elasticsearch
-
-
-//  Read the docs for the following packages:
-//      1. https://node-postgres.com/
-//      2.  result API:
-//              https://node-postgres.com/api/result
-//      3. Nearest Neighbor Search
-//              https://postgis.net/workshops/postgis-intro/knn.html
-//      4. https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/quick-start.html
-//      5. https://momentjs.com/
-//      6. http://momentjs.com/docs/#/displaying/format/
-
-
-////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
-
-
 const express = require('express');
 
-var pg = require('pg');
+const { Pool } = require('pg')
 
 var bodyParser = require('body-parser');
 
-const moment = require('moment');
-
-
-// Connect to elasticsearch Server
-
-const elasticsearch = require('elasticsearch');
-const esClient = new elasticsearch.Client({
-  host: '127.0.0.1:9200',
-  log: 'error'
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'covid_19',
+  password: 'ashok0898',
+  port: 5432,
 });
-
-
-// Connect to PostgreSQL server
-//use default user name as postgres for the below
-
-var conString = "pg://postgres:root@127.0.0.1:5432/chicago_divvy_stations_status";
-//var pg_connection_divvy_trips = "pg://postgres:root@127.0.0.1:5432/chicago_divvy_trips";
-
-
-
-var pgClient = new pg.Client(conString);
-pgClient.connect();
-
-//var pgClientForDivvyTrips = new pg.Client(pg_connection_divvy_trips);
-//pgClientForDivvyTrips.connect();
-
-
 
 const app = express();
 const router = express.Router();
-
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -99,286 +28,147 @@ router.all('*', function (req, res, next) {
     next();
 });
 
-
-
-var places_found = [];
-var stations_found = [];
-var docks_found = [];
-var all_docks_found=[];
-
-var place_selected;
-var station_selected;
-var allRecords = [];
-var isBeginningOfTimeRangeSet = false;
-
-var go_back_in_time_var;
-var go_forward_in_time_var;
-var time_stamp_var_0;
-var time_stamp_var_1;
-var time_stamp_var_2;
-var time_stamp_var_3;
-var time_stamp_var_4;
-
-
-
-const PAST_HOUR =  'Past Hour';
-const PAST_24_HOURS =  'Last 24 Hours';
-const PAST_7_DAYS =  'Last 7 Days';
-
-const SUNDAY    = 0;
-const MONDAY    = 1;
-const TUESDAY   = 2;
-const WEDNESDAY = 3;
-const THURSDAY  = 4;
-const FRIDAY    = 5;
-const SATURDAY  = 6;
-
-
-
-
-var dailyTrips = [];  
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-//////   The following are the routes received from NG/Browser client        ////////
-
-/////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-
-
-router.route('/places').get((req, res) => {
-    console.log('Inside places service in /places - backend');
-    res.json(places_found)
-
-});
-
-
-
-router.route('/place_selected').get((req, res) => {
-
-    res.json(place_selected)
-
-});
-
-router.route('/station_selected').get((req, res) => {
-
-    res.json(station_selected)
-
-});
-
-
-
-router.route('/allPlaces').get((req, res) => {
-
-    res.json(places_found)
-
-});
-
-
-
-
-router.route('/stations').get((req, res) => {
-
-    res.json(stations_found)
-
-});
-
-
-
-router.route('/places/find').post((req, res) => {
-    console.log('Inside places service in /places/find - backend');
-    var str = JSON.stringify(req.body, null, 4);
-
-
-    find_places_from_yelp(req.body.find, req.body.where).then(function (response) {
-        var hits = response;
-        res.json(places_found);
+router.route('/countries-total').get((req, res) => {
+  try{
+    var id = req.params.id;
+    pool.query(`select country_region,sum(confirmed) as confirmed,
+    sum(deaths) as deaths, sum(recovered) as recovered
+    from covid_daily_report group by country_region order by confirmed desc;`, null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'countries_total': results.rows,
+        });
+    })
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
     });
-
+  }
 });
 
+router.route('/exercise/detail/:id').get((req, res) => {
+  try{
+    var id = req.params.id;
 
-
-
-router.route('/stations/find').post((req, res) => {
-
-    var str = JSON.stringify(req.body, null, 4);
-
-    for (var i = 0,len = places_found.length; i < len; i++) {
-
-        if ( places_found[i].name === req.body.placeName ) { // strict equality test
-
-            place_selected = places_found[i];
-
-            break;
-        }
-    }
-
+    pool.query(`select e.id,e.name,e.description,ec.name as ex_cat_name
+    from exercise as e, exercisecategory as ec
+    where e.category = ec.id
+    and e. id=$1`, [id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'exercise_detail': results.rows,
+        });
+    })
+    /* 
     const query = {
-        // give the query a unique name
-        name: 'fetch-divvy',
-        text: ' SELECT * FROM divvy_stations_realtime_status ORDER BY (divvy_stations_realtime_status.where_is <-> ST_POINT($1,$2)) LIMIT 3',
-        values: [place_selected.latitude, place_selected.longitude]
+        name: 'fetch-exercise-detail',
+        text: `select e.id,e.name,e.description,ec.name as ex_cat_name
+                from exercise as e, exercisecategory as ec
+                where e.category = ec.id
+                and e. id=${id};`,
     }
+    console.log(query.text)
 
-    find_stations_from_divvy(query).then(function (response) {
-        var hits = response;
-        res.json({'stations_found': 'Successfully Retrieved'});
+    find_exercise_detail_from_wger(query).then(function (response) {
+        res.json(
+          { 
+            'success': true,
+            'exercise_detail': exercise_detail,
+          });
+    }); */
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
     });
-
-
+  }
 });
 
+router.route('/exercise/muscle/:id').get((req, res) => {
+  try{
+    var id = req.params.id;
 
+    pool.query(`select ex_id,mu_id, name, is_front from map_exercise_muscle as em, muscle as m 
+    where em.mu_id = m.id
+    and ex_id=$1`, [id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'exercise_muscle': results.rows,
+        });
+    })
 
-/////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////    Divvy - PostgreSQL - Client API            /////////////////
-
-////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-
-async function find_stations_from_divvy(query) {
-	const response = await pgClient.query(query);
-
-  stations_found = [];
-
-    for (i = 0; i < 3; i++) {
-
-         plainTextDateTime =  moment(response.rows[i].lastcommunicationtime).format('YYYY-MM-DD, h:mm:ss a');
-
-
-        var station = {
-                    "id": response.rows[i].id,
-                    "stationName": response.rows[i].stationname,
-                    "availableBikes": response.rows[i].availablebikes,
-                    "availableDocks": response.rows[i].availabledocks,
-                    "is_renting": response.rows[i].is_renting,
-                    "lastCommunicationTime": plainTextDateTime,
-                    "latitude": response.rows[i].latitude,
-                    "longitude": response.rows[i].longitude,
-                    "status": response.rows[i].status,
-                    "totalDocks": response.rows[i].totaldocks
-        };
-
-        stations_found.push(station);
-
+    /* 
+    const query = {
+        name: 'fetch-exercise-muscle',
+        text: `select ex_id,mu_id, name, is_front from map_exercise_muscle as em, muscle as m 
+                where em.mu_id = m.id
+                and ex_id=${id};`,
     }
 
-
-}
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////    Yelp - ElasticSerch - Client API            /////////////////
-
-////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////
-
-
-
-async function find_places_from_yelp(place, where) {
-
-    places_found = [];
-
-//////////////////////////////////////////////////////////////////////////////////////
-// Using the business name to search for businesses will leead to incomplete results
-// better to search using categorisa/alias and title associated with the business name
-// For example one of the famous places in chicago for HotDogs is Portillos
-// However, it also offers Salad and burgers
-// Here is an example of a busness review from Yelp for Pertilos
-//               alias': 'portillos-hot-dogs-chicago-4',
-//              'categories': [{'alias': 'hotdog', 'title': 'Hot Dogs'},
-//                             {'alias': 'salad', 'title': 'Salad'},
-//                             {'alias': 'burgers', 'title': 'Burgers'}],
-//              'name': "Portillo's Hot Dogs",
-//////////////////////////////////////////////////////////////////////////////////////
-
-
-    let body = {
-        size: 1000,
-        from: 0,
-        "query": {
-          "bool" : {
-            "must" : {
-               "term" : { "categories.alias" : place }
-            },
-
-
-            "filter": {
-                "term" : { "location.address1" : where  }
-            },
-
-
-            "must_not" : {
-              "range" : {
-                "rating" : { "lte" : 3 }
-              }
-            },
-
-            "must_not" : {
-              "range" : {
-                "review_count" : { "lte" : 500 }
-              }
-            },
-
-            "should" : [
-              { "term" : { "is_closed" : "false" } }
-            ],
-          }
-        }
-    }
-
-
-    results = await esClient.search({index: 'chicago_yelp_reviews', body: body});
-    //console.log(results)
-    results.hits.hits.forEach((hit, index) => {
-
-
-        var place = {
-                "name": hit._source.name,
-                "display_phone": hit._source.display_phone,
-                "address1": hit._source.location.address1,
-                "is_closed": hit._source.is_closed,
-                "rating": hit._source.rating,
-                "review_count": hit._source.review_count,
-                "latitude": hit._source.coordinates.latitude,
-                "longitude": hit._source.coordinates.longitude
-        };
-
-        places_found.push(place);
-
+    find_exercise_muscle_from_wger(query).then(function (response) {
+        res.json(
+          { 
+            'success': true,
+            'exercise_muscle': exercise_muscles,
+          });
+    }); */
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
     });
+  }
+});
 
+router.route('/exercise/equipment/:id').get((req, res) => {
+  try{
+    var id = req.params.id;
 
-}
-
-
+    pool.query(`select ex_id,eq_id,name from 
+    map_exercise_equipment as ee, equipment as eq
+    where ee.eq_id = eq.id
+    and ex_id=$1`, [id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'exercise_equipment': results.rows,
+        });
+    })
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
 
 app.use('/', router);
 
 app.listen(4000, () => {
 
-            for (var i=0;i<7;i++) {
-              dailyTrips[i] = [];
-            }
-
             console.log('Make sure you execute following command before you start the Angular client');
 
             console.log('');            
-            console.log('--------------------------------------------------------');
-
-            console.log('curl -H "Content-Type: application/json" -XPUT "http://localhost:9200/divvy_station_logs/_settings"  -d "{\"index\":{\"max_result_window\":10000000}}"');
-
             console.log('--------------------------------------------------------');
             console.log('');
 
