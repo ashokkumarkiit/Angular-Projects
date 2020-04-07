@@ -30,7 +30,7 @@ router.all('*', function (req, res, next) {
 
 router.route('/countries-total').get((req, res) => {
   try{
-    var id = req.params.id;
+
     pool.query(`select country_region,sum(confirmed) as confirmed,
     sum(deaths) as deaths, sum(recovered) as recovered
     from covid_daily_report group by country_region order by confirmed desc;`, null, (error, results) => {
@@ -52,21 +52,19 @@ router.route('/countries-total').get((req, res) => {
   }
 });
 
-router.route('/exercise/detail/:id').get((req, res) => {
+router.route('/world-total').get((req, res) => {
   try{
-    var id = req.params.id;
 
-    pool.query(`select e.id,e.name,e.description,ec.name as ex_cat_name
-    from exercise as e, exercisecategory as ec
-    where e.category = ec.id
-    and e. id=$1`, [id], (error, results) => {
+    pool.query(`select sum(confirmed) as confirmed,
+    sum(deaths) as deaths, sum(recovered) as recovered
+    from covid_daily_report;`, null, (error, results) => {
       if (error) {
         throw error
       }
       res.status(200).json(
         { 
           'success': true,
-          'exercise_detail': results.rows,
+          'world_total': results.rows,
         });
     })
     /* 

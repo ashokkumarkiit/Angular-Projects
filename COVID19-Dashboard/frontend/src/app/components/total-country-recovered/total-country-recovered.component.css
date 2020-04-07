@@ -1,0 +1,30 @@
+.content-padding {
+    padding:20px;
+  }
+  .content-padding-left {
+    padding-left:5px;
+  }
+  
+  .list-item-style {
+    text-decoration: none;
+    color: #333;
+  }
+
+  .example-viewport {
+    height: 200px;
+    width: 200px;
+    border: 1px solid black;
+  }
+
+  .margin-content-top {
+    margin-top: 45px;
+  }
+
+  .list-item-value {
+    font-weight: 600;
+    padding-right: 5px;
+  }
+
+  .color-green {
+    color: rgb(112, 168, 0);
+}

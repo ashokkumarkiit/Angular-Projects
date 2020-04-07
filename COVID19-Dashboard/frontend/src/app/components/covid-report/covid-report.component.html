@@ -1,3 +1,46 @@
-<p>
-  covid-report works!
-</p>
+<mat-grid-list cols="12" rowHeight="100px" [gutterSize]="'10px'">
+  <mat-grid-tile
+      *ngFor="let tile of tiles"
+      [colspan]="tile.cols"
+      [rowspan]="tile.rows"
+      [style.background]="tile.color"
+      class="grid-box-shadow">
+    <div *ngIf="tile.text === 'total-confirmed'">
+      <app-total-confirmed
+        [tile_name]="tile.text"
+        [total]="world_total[0].confirmed">
+      </app-total-confirmed>
+    </div>
+    <div *ngIf="tile.text === 'total-country-confirmed'" style="height: inherit;overflow: scroll;">
+      <div class="grid-header-style">
+          {{tile.desc}}
+      </div>
+      <app-total-country-confirmed
+        [confirmed_total_list]="countries_total">
+      </app-total-country-confirmed>
+    </div>
+    <div *ngIf="tile.text === 'total-country-deaths'" style="height: inherit;overflow: scroll;">
+        <div class="grid-header-style">
+            {{tile.desc}}
+            <div class="large-digit">
+              {{world_total[0].deaths}}
+            </div>
+        </div>
+        <app-total-country-deaths
+          [confirmed_total_list]="countries_total">
+        </app-total-country-deaths>
+    </div>
+    
+    <div *ngIf="tile.text === 'total-country-recovered'" style="height: inherit;overflow: scroll;">
+        <div class="grid-header-style">
+            {{tile.desc}}
+            <div class="large-digit color-green">
+              {{world_total[0].recovered}}
+            </div>
+        </div>
+        <app-total-country-recovered
+          [confirmed_total_list]="countries_total">
+        </app-total-country-recovered>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>

@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
+import { ScrollDispatchModule } from '@angular/cdk/scrolling';
 
 
 
@@ -24,12 +25,20 @@ import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CovidReportComponent } from './components/covid-report/covid-report.component';
+import { TotalConfirmedComponent } from './components/total-confirmed/total-confirmed.component';
+import { TotalCountryConfirmedComponent } from './components/total-country-confirmed/total-country-confirmed.component';
+import { TotalCountryDeathsComponent } from './components/total-country-deaths/total-country-deaths.component';
+import { TotalCountryRecoveredComponent } from './components/total-country-recovered/total-country-recovered.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CovidReportComponent,
+    TotalConfirmedComponent,
+    TotalCountryConfirmedComponent,
+    TotalCountryDeathsComponent,
+    TotalCountryRecoveredComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,8 +64,8 @@ import { CovidReportComponent } from './components/covid-report/covid-report.com
     FormsModule,
     NgbModule,
     MatCheckboxModule,
-    AppRoutingModule
-
+    AppRoutingModule,
+    ScrollDispatchModule
   ],
 
   providers: [GoogleMapsAPIWrapper],
