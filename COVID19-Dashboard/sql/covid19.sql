@@ -11,3 +11,5 @@ select sum(confirmed) as confirmed,
 select country_region,sum(confirmed) as confirmed,
 	sum(deaths) as deaths, sum(recovered) as recovered
 	from covid_daily_report group by country_region order by confirmed desc;
+	
+-- Map Query

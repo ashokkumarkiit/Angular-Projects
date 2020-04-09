@@ -1,0 +1,22 @@
+.grid-header-style {
+    /* position: absolute;
+    border-bottom: 1px solid;
+    border-bottom-color: rgba(0,0,0,.12);*/
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 500;
+    /* background: rgb(222, 222, 222); */
+    color: #333;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+}
+
+.large-digit {
+    font-weight: 600;
+    font-size: x-large;
+}
+
+.color-red {
+    color: #e61e1e;
+}

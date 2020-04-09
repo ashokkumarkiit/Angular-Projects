@@ -7,7 +7,7 @@
       class="grid-box-shadow">
     <div *ngIf="tile.text === 'total-confirmed'">
       <app-total-confirmed
-        [tile_name]="tile.text"
+        [tile_name]="tile.desc"
         [total]="world_total[0].confirmed">
       </app-total-confirmed>
     </div>
@@ -16,7 +16,7 @@
           {{tile.desc}}
       </div>
       <app-total-country-confirmed
-        [confirmed_total_list]="countries_total">
+        [confirmed_total_list]="countries_total_confirmed">
       </app-total-country-confirmed>
     </div>
     <div *ngIf="tile.text === 'total-country-deaths'" style="height: inherit;overflow: scroll;">
@@ -27,7 +27,7 @@
             </div>
         </div>
         <app-total-country-deaths
-          [confirmed_total_list]="countries_total">
+          [confirmed_total_list]="countries_total_deaths">
         </app-total-country-deaths>
     </div>
     
@@ -39,7 +39,7 @@
             </div>
         </div>
         <app-total-country-recovered
-          [confirmed_total_list]="countries_total">
+          [confirmed_total_list]="countries_total_recovered">
         </app-total-country-recovered>
     </div>
   </mat-grid-tile>

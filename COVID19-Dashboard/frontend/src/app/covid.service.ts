@@ -16,8 +16,16 @@ export class CovidService {
 
   constructor(private http: HttpClient) { }
 
-  getCountriesTotal(): Observable<CountriesTotalResponse> {
-    return this.http.get<CountriesTotalResponse>(`${this.uri}/countries-total`);
+  getCountriesTotalConfirmed(): Observable<CountriesTotalResponse> {
+    return this.http.get<CountriesTotalResponse>(`${this.uri}/countries-total/confirmed`);
+  }
+
+  getCountriesTotalDeaths(): Observable<CountriesTotalResponse> {
+    return this.http.get<CountriesTotalResponse>(`${this.uri}/countries-total/deaths`);
+  }
+
+  getCountriesTotalRecovered(): Observable<CountriesTotalResponse> {
+    return this.http.get<CountriesTotalResponse>(`${this.uri}/countries-total/recovered`);
   }
 
   getWorldTotal(): Observable<WorldTotalResponse> {

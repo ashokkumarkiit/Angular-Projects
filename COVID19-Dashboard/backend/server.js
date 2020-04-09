@@ -28,12 +28,57 @@ router.all('*', function (req, res, next) {
     next();
 });
 
-router.route('/countries-total').get((req, res) => {
+router.route('/countries-total/confirmed').get((req, res) => {
   try{
 
-    pool.query(`select country_region,sum(confirmed) as confirmed,
-    sum(deaths) as deaths, sum(recovered) as recovered
-    from covid_daily_report group by country_region order by confirmed desc;`, null, (error, results) => {
+    pool.query(`select country_region,sum(confirmed) as total
+    from covid_daily_report group by country_region order by total desc;`, null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'countries_total': results.rows,
+        });
+    })
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/countries-total/deaths').get((req, res) => {
+  try{
+
+    pool.query(`select country_region,sum(deaths) as total
+    from covid_daily_report group by country_region order by total desc;`, null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'countries_total': results.rows,
+        });
+    })
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/countries-total/recovered').get((req, res) => {
+  try{
+
+    pool.query(`select country_region,sum(recovered) as total
+    from covid_daily_report group by country_region order by total desc;`, null, (error, results) => {
       if (error) {
         throw error
       }
@@ -67,23 +112,6 @@ router.route('/world-total').get((req, res) => {
           'world_total': results.rows,
         });
     })
-    /* 
-    const query = {
-        name: 'fetch-exercise-detail',
-        text: `select e.id,e.name,e.description,ec.name as ex_cat_name
-                from exercise as e, exercisecategory as ec
-                where e.category = ec.id
-                and e. id=${id};`,
-    }
-    console.log(query.text)
-
-    find_exercise_detail_from_wger(query).then(function (response) {
-        res.json(
-          { 
-            'success': true,
-            'exercise_detail': exercise_detail,
-          });
-    }); */
   }
   catch(ex) {
     res.json({
@@ -93,62 +121,18 @@ router.route('/world-total').get((req, res) => {
   }
 });
 
-router.route('/exercise/muscle/:id').get((req, res) => {
+router.route('/world-locations').get((req, res) => {
   try{
-    var id = req.params.id;
 
-    pool.query(`select ex_id,mu_id, name, is_front from map_exercise_muscle as em, muscle as m 
-    where em.mu_id = m.id
-    and ex_id=$1`, [id], (error, results) => {
+    pool.query(`select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
+    from covid_daily_report where longitude != 0.0 or latitude != 0.0;`, null, (error, results) => {
       if (error) {
         throw error
       }
       res.status(200).json(
         { 
           'success': true,
-          'exercise_muscle': results.rows,
-        });
-    })
-
-    /* 
-    const query = {
-        name: 'fetch-exercise-muscle',
-        text: `select ex_id,mu_id, name, is_front from map_exercise_muscle as em, muscle as m 
-                where em.mu_id = m.id
-                and ex_id=${id};`,
-    }
-
-    find_exercise_muscle_from_wger(query).then(function (response) {
-        res.json(
-          { 
-            'success': true,
-            'exercise_muscle': exercise_muscles,
-          });
-    }); */
-  }
-  catch(ex) {
-    res.json({
-      error:ex.toString(),
-      'success': false
-    });
-  }
-});
-
-router.route('/exercise/equipment/:id').get((req, res) => {
-  try{
-    var id = req.params.id;
-
-    pool.query(`select ex_id,eq_id,name from 
-    map_exercise_equipment as ee, equipment as eq
-    where ee.eq_id = eq.id
-    and ex_id=$1`, [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      res.status(200).json(
-        { 
-          'success': true,
-          'exercise_equipment': results.rows,
+          'world_location': results.rows,
         });
     })
   }
@@ -159,6 +143,8 @@ router.route('/exercise/equipment/:id').get((req, res) => {
     });
   }
 });
+
+
 
 app.use('/', router);
 

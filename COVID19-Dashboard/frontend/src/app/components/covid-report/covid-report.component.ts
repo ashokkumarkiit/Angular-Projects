@@ -18,7 +18,7 @@ export interface Tile {
 export class CovidReportComponent implements OnInit {
 
   tiles: Tile[] = [
-    {text: 'total-confirmed', cols: 2, rows: 1, color: 'lightblue', desc: 'Total Confirmed'},
+    {text: 'total-confirmed', cols: 2, rows: 1, color: 'white', desc: 'Total Confirmed'},
     {text: 'Two', cols: 6, rows: 6, color: 'lightgreen', desc: 'Map'},
     {text: 'total-country-deaths', cols: 2, rows: 3, color: 'white', desc: 'Total Deaths'},
     {text: 'total-country-recovered', cols: 2, rows: 3, color: 'white', desc: 'Total Recovered'},
@@ -26,20 +26,36 @@ export class CovidReportComponent implements OnInit {
     {text: 'Six', cols: 4, rows: 3, color: 'lightgreen', desc: 'Graph'},
   ];
 
-  countries_total: CountriesTotal[];
+  countries_total_confirmed: CountriesTotal[];
+  countries_total_deaths: CountriesTotal[];
+  countries_total_recovered: CountriesTotal[];
   world_total: WorldTotal[];
 
   constructor(private covidService: CovidService) { }
 
   ngOnInit() {
     // Initialization Logic
-    this.getCountriesTotal();
+    this.getCountriesTotalConfirmed();
+    this.getCountriesTotalDeaths();
+    this.getCountriesTotalRecovered();
     this.getWorldTotal();
   }
 
-  getCountriesTotal(): void {
-    this.covidService.getCountriesTotal().subscribe(
-      res => this.countries_total = res.countries_total
+  getCountriesTotalConfirmed(): void {
+    this.covidService.getCountriesTotalConfirmed().subscribe(
+      res => this.countries_total_confirmed = res.countries_total
+    );
+  }
+
+  getCountriesTotalDeaths(): void {
+    this.covidService.getCountriesTotalDeaths().subscribe(
+      res => this.countries_total_deaths = res.countries_total
+    );
+  }
+
+  getCountriesTotalRecovered(): void {
+    this.covidService.getCountriesTotalRecovered().subscribe(
+      res => this.countries_total_recovered = res.countries_total
     );
   }
 
