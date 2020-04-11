@@ -5,6 +5,7 @@ import { CountriesTotalResponse } from './countries-total';
 import { WorldTotalResponse } from './world-total';
 import { MapDataResponse } from './map-data';
 import { TimeSeriesResponse } from './timeseries-data';
+import { TimeSeriesDRResponse } from './timeseries-deaths-recovered-data';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,10 @@ export class CovidService {
 
   getTimeSeriesConfirmed(): Observable<TimeSeriesResponse> {
     return this.http.get<TimeSeriesResponse>(`${this.uri}/timeseries-confirmed`);
+  }
+
+  getTimeSeriesDeathsRecovered(): Observable<TimeSeriesDRResponse> {
+    return this.http.get<TimeSeriesDRResponse>(`${this.uri}/timeseries-deaths-recovered`);
   }
 
 }

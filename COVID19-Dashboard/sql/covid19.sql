@@ -49,3 +49,8 @@ select category,TO_CHAR(TO_DATE(report_date, 'MM/dd/YY'),'MM-dd-YYYY') as report
 from covid_timeseries_report 
 where category = 'confirmed'
 group by category,report_date order by total;
+
+select category,TO_CHAR(TO_DATE(report_date, 'MM/dd/YY'),'MM-dd-YYYY') as report_date, sum(total) as total 
+    from covid_timeseries_report 
+    where category in ('deaths', 'recovered')
+    group by category,report_date order by report_date;

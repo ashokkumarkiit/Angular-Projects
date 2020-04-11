@@ -125,7 +125,7 @@ router.route('/world-total').get((req, res) => {
 
 router.route('/world-locations').get((req, res) => {
   try{
-    let max_val = 0
+    let max_val = 172348
     let us_state_coord_mapping = {}
     let us_result = []
     let non_us_results = []
@@ -140,10 +140,9 @@ router.route('/world-locations').get((req, res) => {
       /*  results.rows.forEach(row => {
         country_max[row.country_region] = row.confirmed
       }); */
-
-      // console.log(country_max);
-
       max_val = results.rows[0].max
+
+      console.log(max_val);
     })
 
     var fs = require('fs');
@@ -169,10 +168,15 @@ router.route('/world-locations').get((req, res) => {
       us_result = results.rows.map(row => {
         let radius = 15;
         let cal_radius = (row.confirmed/max_val)*50;
+        // console.log(cal_radius);
         if (cal_radius > 20 )
           radius = (row.confirmed/max_val)*50
-        else
-          radius = 10
+        else if( cal_radius > 5) {
+          radius = 15
+        }
+        else {
+          radius = 7
+        }
         // console.log(us_state_coord_mapping[row.province_state].lat)
         return {
           province_state: row.province_state,
@@ -266,6 +270,55 @@ router.route('/timeseries-confirmed').get((req, res) => {
               total: parseInt(row.total)
             }
           }),
+        });
+    })
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/timeseries-deaths-recovered').get((req, res) => {
+  try{
+
+    pool.query(`select category,TO_CHAR(TO_DATE(report_date, 'MM/dd/YY'),'MM-dd-YYYY') as report_date, sum(total) as total 
+    from covid_timeseries_report 
+    where category in ('deaths', 'recovered')
+    group by category,report_date order by report_date;`, null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      let res_death = []
+      let res_recovered = []
+      results.rows.map(row => {
+        
+        if(row.category == 'deaths') {
+          res_death.push({
+            category: row.category,
+            report_date: row.report_date,
+            total: parseInt(row.total)
+          })
+        }
+        if(row.category == 'recovered') {
+          res_recovered.push({
+            category: row.category,
+            report_date: row.report_date,
+            total: parseInt(row.total)
+          })
+        }
+        
+      });
+
+      res.status(200).json(
+        { 
+          'success': true,
+          'timeseries_data':{
+            deaths: res_death,
+            recovered: res_recovered
+          },
         });
     })
   }

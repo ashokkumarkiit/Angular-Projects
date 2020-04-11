@@ -63,5 +63,18 @@
         </app-line-chart-confirmed>
       </ng-template>
     </div>
+
+    <div *ngIf="tile.text === 'timeseries-dr'" style="width: 100%;">
+        <ng-template *ngIf="isTimeSeriesDRDataLoading;then showLoader else showGraphCompoenent"></ng-template>    
+        <ng-template #showLoader><mat-spinner></mat-spinner></ng-template>
+        <ng-template #showGraphCompoenent>
+          <!-- <div class="grid-header-style">
+              {{tile.desc}}
+          </div>  --> 
+          <app-line-chart-deaths-recovered
+            [timeseries_dr]="obj_death_recovered">
+          </app-line-chart-deaths-recovered>
+        </ng-template>
+      </div>
   </mat-grid-tile>
 </mat-grid-list>

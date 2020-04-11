@@ -1,9 +1,11 @@
+import { map } from 'rxjs/operators';
 import { TimeSeries } from './../../timeseries-data';
 import { MapData } from './../../map-data';
 import { Component, OnInit } from '@angular/core';
 import { CovidService } from './../../covid.service';
 import { CountriesTotal } from 'src/app/countries-total';
 import { WorldTotal } from 'src/app/world-total';
+import { TimeSeriesDRContainer, TimeSeriesDRCombined } from 'src/app/timeseries-deaths-recovered-data';
 export interface Tile {
   color: string;
   cols: number;
@@ -25,7 +27,7 @@ export class CovidReportComponent implements OnInit {
     {text: 'total-country-deaths', cols: 2, rows: 6, color: 'white', desc: 'Total Deaths'},
     {text: 'total-country-recovered', cols: 2, rows: 6, color: 'white', desc: 'Total Recovered'},
     {text: 'total-country-confirmed', cols: 2, rows: 5, color: 'white', desc: 'Confirmed Cases by Country/Region'},
-    {text: 'Six', cols: 6, rows: 3, color: 'red', desc: 'Graph'},
+    {text: 'timeseries-dr', cols: 6, rows: 3, color: 'white', desc: 'Timeseries Deaths & Recovered'},
   ];
 
   countries_total_confirmed: CountriesTotal[];
@@ -36,6 +38,11 @@ export class CovidReportComponent implements OnInit {
   isMapDataLoading: Boolean = false;
   timeSeries_confirmed_data: TimeSeries[];
   isTimeSeriesConfirmedDataLoading: Boolean = false;
+  timeSeries_dr_data: TimeSeriesDRContainer;
+  isTimeSeriesDRDataLoading: Boolean = false;
+  timeseries_dr_combined_data: TimeSeriesDRCombined[];
+  obj_death_recovered = []; 
+
 
   constructor(private covidService: CovidService) { }
 
@@ -47,6 +54,7 @@ export class CovidReportComponent implements OnInit {
     this.getWorldTotal();
     this.getWorldLocations();
     this.getTimeSeriesConfirmed();
+    this.getTimeSeriesDeathsRecovered();
     // console.log("Inside Home - ", this.map_data);
   }
 
@@ -92,6 +100,67 @@ export class CovidReportComponent implements OnInit {
         this.timeSeries_confirmed_data = res.timeseries_data;
       }
     );
+  } 
+  
+  getTimeSeriesDeathsRecovered(): void {
+    this.isTimeSeriesDRDataLoading = true;
+    this.covidService.getTimeSeriesDeathsRecovered().subscribe(
+      res => {
+        this.isTimeSeriesDRDataLoading = false;
+        this.timeSeries_dr_data = res.timeseries_data;
+        this.generateCombinedRecordForTimeseriesDR();
+      }
+    );
+  }
+
+  generateCombinedRecordForTimeseriesDR() {
+    let kvData = new Map;
+    this.timeSeries_dr_data.deaths.forEach(element => {
+      let data = {
+        report_date: element.report_date,
+        total_deaths: element.total,
+        total_recovered: 0
+      }
+      kvData.set(element.report_date,data);
+    });
+
+    this.timeSeries_dr_data.recovered.forEach(element => {
+
+      let prevData = kvData.get(element.report_date);
+      let new_data = {
+        report_date: prevData.report_date,
+        total_deaths: prevData.total_deaths,
+        total_recovered: element.total
+      }
+      kvData.set(element.report_date,new_data);
+    });
+
+
+    /*
+    this.timeSeries_dr_data.deaths.forEach(element => {
+      let data: TimeSeriesDRCombined;
+      data.report_date = element.report_date;
+      data.totalDeaths = element.total;
+      data.totalRecovered = 0;
+      kvData.set(element.report_date,data);
+    });
+
+    this.timeSeries_dr_data.recovered.forEach(element => {
+      let data: TimeSeriesDRCombined;
+      data = kvData.get(element.report_date);
+      data.totalRecovered = element.total;
+      kvData.set(element.report_date,data);
+    });
+    */
+
+    console.log(kvData);
+    
+
+    this.timeSeries_dr_data.recovered.forEach(element => {
+      this.obj_death_recovered.push(kvData.get(element.report_date));
+    });
+  
+    console.log(this.obj_death_recovered);
   }
 
 }
