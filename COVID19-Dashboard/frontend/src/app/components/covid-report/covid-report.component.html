@@ -42,5 +42,26 @@
           [confirmed_total_list]="countries_total_recovered">
         </app-total-country-recovered>
     </div>
+    <!-- <div *ngIf="tile.text === 'timeseries-confirmed'" style="height: inherit;overflow: scroll;">
+      <div class="grid-header-style">
+          {{tile.desc}}
+      </div>
+      <app-line-chart-confirmed
+        [timeseries_confirmed]="timeSeries_confirmed_data">
+      </app-line-chart-confirmed>
+    </div> -->
+
+    <div *ngIf="tile.text === 'timeseries-confirmed'" style="width: 100%;">
+      <ng-template *ngIf="isTimeSeriesConfirmedDataLoading;then showLoader else showGraphCompoenent"></ng-template>    
+      <ng-template #showLoader><mat-spinner></mat-spinner></ng-template>
+      <ng-template #showGraphCompoenent>
+        <!-- <div class="grid-header-style">
+            {{tile.desc}}
+        </div>  --> 
+        <app-line-chart-confirmed
+          [timeseries_confirmed]="timeSeries_confirmed_data">
+        </app-line-chart-confirmed>
+      </ng-template>
+    </div>
   </mat-grid-tile>
 </mat-grid-list>

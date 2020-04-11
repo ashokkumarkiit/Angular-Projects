@@ -16,7 +16,7 @@ import { MatToolbarModule, MatFormFieldModule,
     MatCheckboxModule, MatInputModule,
     MatOptionModule, MatSelectModule, MatIconModule, MatButtonModule,
     MatCardModule, MatTableModule, MatDividerModule, MatSnackBarModule,
-    MatGridListModule, MatListModule } from '@angular/material';
+    MatGridListModule, MatListModule, MatProgressSpinnerModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +29,9 @@ import { TotalConfirmedComponent } from './components/total-confirmed/total-conf
 import { TotalCountryConfirmedComponent } from './components/total-country-confirmed/total-country-confirmed.component';
 import { TotalCountryDeathsComponent } from './components/total-country-deaths/total-country-deaths.component';
 import { TotalCountryRecoveredComponent } from './components/total-country-recovered/total-country-recovered.component';
+import { WorldMapReportComponent } from './components/world-map-report/world-map-report.component';
+import { LineChartConfirmedComponent } from './components/line-chart-confirmed/line-chart-confirmed.component';
+import { LineChartDeathsRecoveredComponent } from './components/line-chart-deaths-recovered/line-chart-deaths-recovered.component';
 
 
 @NgModule({
@@ -39,6 +42,9 @@ import { TotalCountryRecoveredComponent } from './components/total-country-recov
     TotalCountryConfirmedComponent,
     TotalCountryDeathsComponent,
     TotalCountryRecoveredComponent,
+    WorldMapReportComponent,
+    LineChartConfirmedComponent,
+    LineChartDeathsRecoveredComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +71,8 @@ import { TotalCountryRecoveredComponent } from './components/total-country-recov
     NgbModule,
     MatCheckboxModule,
     AppRoutingModule,
-    ScrollDispatchModule
+    ScrollDispatchModule,
+    MatProgressSpinnerModule
   ],
 
   providers: [GoogleMapsAPIWrapper],

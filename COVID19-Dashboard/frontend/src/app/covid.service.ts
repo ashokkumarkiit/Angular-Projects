@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CountriesTotalResponse } from './countries-total';
 import { WorldTotalResponse } from './world-total';
+import { MapDataResponse } from './map-data';
+import { TimeSeriesResponse } from './timeseries-data';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +32,14 @@ export class CovidService {
 
   getWorldTotal(): Observable<WorldTotalResponse> {
     return this.http.get<WorldTotalResponse>(`${this.uri}/world-total`);
+  }
+
+  getWorldLocations(): Observable<MapDataResponse> {
+    return this.http.get<MapDataResponse>(`${this.uri}/world-locations`);
+  }
+
+  getTimeSeriesConfirmed(): Observable<TimeSeriesResponse> {
+    return this.http.get<TimeSeriesResponse>(`${this.uri}/timeseries-confirmed`);
   }
 
 }
