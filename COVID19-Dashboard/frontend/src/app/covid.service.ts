@@ -1,3 +1,4 @@
+import { USDailyResponse } from './us-daily-report';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -45,6 +46,10 @@ export class CovidService {
 
   getTimeSeriesDeathsRecovered(): Observable<TimeSeriesDRResponse> {
     return this.http.get<TimeSeriesDRResponse>(`${this.uri}/timeseries-deaths-recovered`);
+  }
+
+  getUSDailyReport(): Observable<USDailyResponse> {
+    return this.http.get<USDailyResponse>(`${this.uri}/us-daily-report`);
   }
 
 }

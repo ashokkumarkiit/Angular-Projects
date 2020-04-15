@@ -32,6 +32,7 @@ import { TotalCountryRecoveredComponent } from './components/total-country-recov
 import { WorldMapReportComponent } from './components/world-map-report/world-map-report.component';
 import { LineChartConfirmedComponent } from './components/line-chart-confirmed/line-chart-confirmed.component';
 import { LineChartDeathsRecoveredComponent } from './components/line-chart-deaths-recovered/line-chart-deaths-recovered.component';
+import { UsStateReportComponent } from './components/us-state-report/us-state-report.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { LineChartDeathsRecoveredComponent } from './components/line-chart-death
     WorldMapReportComponent,
     LineChartConfirmedComponent,
     LineChartDeathsRecoveredComponent,
+    UsStateReportComponent,
   ],
   imports: [
     BrowserModule,

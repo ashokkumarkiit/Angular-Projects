@@ -10,7 +10,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'covid_19',
-  password: 'ashok0898',
+  password: 'root',
   port: 5432,
 });
 
@@ -125,47 +125,32 @@ router.route('/world-total').get((req, res) => {
 
 router.route('/world-locations').get((req, res) => {
   try{
-    let max_val = 172348
-    let us_state_coord_mapping = {}
-    let us_result = []
+    let max_val = 203020 /* Default Value */
     let non_us_results = []
-    pool.query(/* `select country_region,sum(confirmed) as confirmed,
-    sum(deaths) as deaths, sum(recovered) as recovered
-    from covid_daily_report group by country_region order by confirmed desc`*/`select max(confirmed) from (select province_state,country_region,sum(confirmed) as confirmed,
+    pool.query(`select max(confirmed) from (select province_state,country_region,sum(confirmed) as confirmed,
 	  sum(deaths) as deaths, sum(recovered) as recovered
 	  from covid_daily_report group by country_region,province_state order by confirmed desc) as tbl`, null, (error, results) => {
       if (error) {
         throw error
       }
-      /*  results.rows.forEach(row => {
-        country_max[row.country_region] = row.confirmed
-      }); */
       max_val = results.rows[0].max
 
-      console.log(max_val);
+      // console.log(max_val);
     })
-
-    var fs = require('fs');
-    var obj = JSON.parse(fs.readFileSync(path.join(__dirname, 'us-states.json'), 'utf8'));
-
-    // console.log(obj.states);
-    obj.states.forEach(row => {
-      us_state_coord_mapping[row.name] = row
-      });
-    // onsole.log(us_state_coord_mapping);
-    // console.log(Object.keys(us_state_coord_mapping).length);
-
-    /* US Data */
-    pool.query(`select province_state,country_region, sum(confirmed) as confirmed, sum(deaths) as deaths, sum(recovered) as recovered--, latitude, longitude 
-    from covid_daily_report 
+    
+    pool.query(`select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
+    from covid_daily_report where (longitude != 0.0 or latitude != 0.0)
+    and country_region != 'US'
+	UNION
+select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
+    from covid_daily_report_us 
     where (longitude != 0.0 or latitude != 0.0)
-    and country_region = 'US'
-    group by province_state, country_region
-    order by confirmed desc;`, null, (error, results) => {
+    and country_region = 'US'`, null, (error, results) => {
       if (error) {
         throw error
       }
-      us_result = results.rows.map(row => {
+
+      non_us_results = results.rows.map(row => {
         let radius = 15;
         let cal_radius = (row.confirmed/max_val)*50;
         // console.log(cal_radius);
@@ -177,35 +162,6 @@ router.route('/world-locations').get((req, res) => {
         else {
           radius = 7
         }
-        // console.log(us_state_coord_mapping[row.province_state].lat)
-        return {
-          province_state: row.province_state,
-          country_region: row.country_region,
-          radius: radius,//(row.confirmed/max_val)*50, //(row.confirmed/parseInt(country_max[row.country_region]))*50,
-          fillKey: 'bubbleColorLightRed',
-          confirmed: row.confirmed,
-          deaths: row.deaths,
-          recovered: row.recovered,
-          active: row.confirmed - (row.deaths + row.recovered),
-          latitude: us_state_coord_mapping[row.province_state].lat,
-          longitude: us_state_coord_mapping[row.province_state].long
-        }
-      });
-    })
-    
-    pool.query(`select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
-    from covid_daily_report where (longitude != 0.0 or latitude != 0.0)
-    and country_region != 'US';`, null, (error, results) => {
-      if (error) {
-        throw error
-      }
-
-      non_us_results = results.rows.map(row => {
-        let cal_radius = (row.confirmed/max_val)*50;
-        if (cal_radius > 20 )
-          radius = (row.confirmed/max_val)*50
-        else
-          radius = 10
         return {
           province_state: row.province_state,
           country_region: row.country_region,
@@ -223,21 +179,7 @@ router.route('/world-locations').get((req, res) => {
       res.status(200).json(
         { 
           'success': true,
-          'world_location': us_result.concat(non_us_results) /* results.rows.map(row => {
-            // console.log(results.rows[0]);
-            return {
-              province_state: row.province_state,
-              country_region: row.country_region,
-              radius: (row.confirmed/max_val)*100, // (row.confirmed/parseInt(country_max[row.country_region]))*50,
-              fillKey: 'bubbleColorLightRed',
-              confirmed: row.confirmed,
-              deaths: row.deaths,
-              recovered: row.recovered,
-              active: row.confirmed - (row.deaths + row.recovered),
-              latitude: row.latitude,
-              longitude: row.longitude
-            }
-          })*/,
+          'world_location': non_us_results,
         });
     })
   }
@@ -319,6 +261,30 @@ router.route('/timeseries-deaths-recovered').get((req, res) => {
             deaths: res_death,
             recovered: res_recovered
           },
+        });
+    })
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/us-daily-report').get((req, res) => {
+  try{
+
+    pool.query(`select province_state,sum(confirmed) as confirmed, sum(deaths) as deaths, sum(recovered) as recovered 
+    from covid_daily_report_us where country_region = 'US' and upper(province_state) != upper('Recovered') 
+    group by province_state order by confirmed desc;`, null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'us_state_daily_report': results.rows,
         });
     })
   }

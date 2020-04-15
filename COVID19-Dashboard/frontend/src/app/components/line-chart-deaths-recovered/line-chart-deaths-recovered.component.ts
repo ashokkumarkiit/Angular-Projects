@@ -14,6 +14,7 @@ export class LineChartDeathsRecoveredComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.timeseries_dr)
   }
 
   ngAfterViewInit() {
