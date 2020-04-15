@@ -54,3 +54,17 @@ select category,TO_CHAR(TO_DATE(report_date, 'MM/dd/YY'),'MM-dd-YYYY') as report
     from covid_timeseries_report 
     where category in ('deaths', 'recovered')
     group by category,report_date order by report_date;
+	
+select province_state,sum(confirmed) as confirmed, sum(deaths) as deaths, sum(recovered) as recovered 
+	from covid_daily_report_us where country_region = 'US' and upper(province_state) != upper('Recovered')  group by province_state order by confirmed desc;
+
+select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
+    from covid_daily_report where (longitude != 0.0 or latitude != 0.0)
+    and country_region != 'US'
+	UNION
+select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
+    from covid_daily_report_us 
+    where (longitude != 0.0 or latitude != 0.0)
+    and country_region = 'US'
+	and upper(province_state) != upper('Recovered')
+    order by confirmed desc;

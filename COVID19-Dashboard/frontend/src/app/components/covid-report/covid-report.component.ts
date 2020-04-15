@@ -1,5 +1,6 @@
 import { map } from 'rxjs/operators';
 import { TimeSeries } from './../../timeseries-data';
+import { interval } from 'rxjs'
 import { MapData } from './../../map-data';
 import { Component, OnInit } from '@angular/core';
 import { CovidService } from './../../covid.service';
@@ -31,11 +32,15 @@ export class CovidReportComponent implements OnInit {
   ];
 
   countries_total_confirmed: CountriesTotal[];
+  isCountriesTotalConfirmedLoading:Boolean =  false;
   countries_total_deaths: CountriesTotal[];
+  isCountriesTotalDeathsLoading:Boolean =  false;
   countries_total_recovered: CountriesTotal[];
+  isCountriesTotalRecoveredLoading:Boolean =  false;
   world_total: WorldTotal[];
-  map_data: MapData[];
-  isMapDataLoading: Boolean = false;
+  isWorldTotalLoading:Boolean = false;
+  // map_data: MapData[];
+  // isMapDataLoading: Boolean = false;
   timeSeries_confirmed_data: TimeSeries[];
   isTimeSeriesConfirmedDataLoading: Boolean = false;
   timeSeries_dr_data: TimeSeriesDRContainer;
@@ -48,41 +53,76 @@ export class CovidReportComponent implements OnInit {
 
   ngOnInit() {
     // Initialization Logic
-    this.getCountriesTotalConfirmed();
+    /* this.getCountriesTotalConfirmed();
     this.getCountriesTotalDeaths();
     this.getCountriesTotalRecovered();
     this.getWorldTotal();
     this.getWorldLocations();
     this.getTimeSeriesConfirmed();
-    this.getTimeSeriesDeathsRecovered();
+    this.getTimeSeriesDeathsRecovered();*/
     // console.log("Inside Home - ", this.map_data);
+
+    this.loadWebsiteData();
+    /* this.interval = setInterval(() => { 
+        this.loadWebsiteData(); 
+    }, 5000);*/
+    
+    interval(60* 1000).subscribe(() => {
+      this.loadWebsiteData();
+    })
+  }
+
+  loadWebsiteData() {
+    this.getCountriesTotalConfirmed();
+    this.getCountriesTotalDeaths();
+    this.getCountriesTotalRecovered();
+    this.getWorldTotal();
+    // this.getWorldLocations();
+    this.getTimeSeriesConfirmed();
+    this.getTimeSeriesDeathsRecovered();
   }
 
   getCountriesTotalConfirmed(): void {
+    this.isCountriesTotalConfirmedLoading = true;
     this.covidService.getCountriesTotalConfirmed().subscribe(
-      res => this.countries_total_confirmed = res.countries_total
+      res => {
+        this.countries_total_confirmed = res.countries_total;
+        this.isCountriesTotalConfirmedLoading = false;
+      }
     );
   }
 
   getCountriesTotalDeaths(): void {
+    this.isCountriesTotalDeathsLoading = true;
     this.covidService.getCountriesTotalDeaths().subscribe(
-      res => this.countries_total_deaths = res.countries_total
+      res => {
+        this.countries_total_deaths = res.countries_total;
+        this.isCountriesTotalDeathsLoading = false;
+      }
     );
   }
 
   getCountriesTotalRecovered(): void {
+    this.isCountriesTotalRecoveredLoading = true;
     this.covidService.getCountriesTotalRecovered().subscribe(
-      res => this.countries_total_recovered = res.countries_total
+      res => {
+        this.countries_total_recovered = res.countries_total; 
+        this.isCountriesTotalRecoveredLoading = false;
+      }
     );
   }
 
   getWorldTotal(): void {
+    this.isWorldTotalLoading = true;
     this.covidService.getWorldTotal().subscribe(
-      res => this.world_total = res.world_total
+      res => {
+        this.world_total = res.world_total;
+        this.isWorldTotalLoading = false;
+      }
     );
   }
 
-  getWorldLocations(): void {
+  /* getWorldLocations(): void {
     this.isMapDataLoading = true;
     this.covidService.getWorldLocations().subscribe(
       res => {
@@ -90,7 +130,7 @@ export class CovidReportComponent implements OnInit {
         this.map_data = res.world_location;
       }
     );
-  }
+  }*/
 
   getTimeSeriesConfirmed(): void {
     this.isTimeSeriesConfirmedDataLoading = true;

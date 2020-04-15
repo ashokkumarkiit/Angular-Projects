@@ -2,6 +2,7 @@ import { MapData } from './../../map-data';
 import { Component, OnInit, Input } from '@angular/core';
 import * as Datamap from 'node_modules/datamaps/dist/datamaps.world.min.js';
 import { CovidService } from './../../covid.service';
+import { interval } from 'rxjs'
 
 @Component({
   selector: 'app-world-map-report',
@@ -21,6 +22,9 @@ export class WorldMapReportComponent implements OnInit {
     // let map = new Datamap({element: document.getElementById('container')});
     this.getWorldLocations();
     // this.renderMap();
+    interval(5*1000).subscribe(() => {
+      this.getWorldLocations();
+    });
   }
 
   getWorldLocations(): void {
@@ -35,6 +39,7 @@ export class WorldMapReportComponent implements OnInit {
   }
 
   renderMap() {
+    document.getElementById('container').innerHTML = "";
     var bombMap = new Datamap({
       element: document.getElementById('container'),
       scope: 'world',

@@ -4,3 +4,9 @@
     font-weight: 500;
     text-decoration: underline;
 }
+
+.loader-position {
+    height: 100%;
+    align-content: center;
+    display: grid;
+}

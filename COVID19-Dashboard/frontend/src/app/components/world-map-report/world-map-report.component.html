@@ -1,6 +1,10 @@
 <div id="container" style="position: relative; width: 100%; height: 550px;"></div>
 <ng-template *ngIf="isMapDataLoading;then showLoader else showMapCompoenent"></ng-template>    
-<ng-template #showLoader><mat-spinner></mat-spinner></ng-template>
+<ng-template #showLoader>
+    <div class="loader-position">
+        <mat-spinner diameter="40"></mat-spinner>
+    </div>
+</ng-template>
 <ng-template #showMapCompoenent>  
 </ng-template>
 

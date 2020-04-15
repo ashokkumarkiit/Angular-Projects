@@ -1,2 +1,12 @@
 <div class="header-text">US States Daily Report</div>
 <div id="chart_us" style="width: 95%; height: 500px;"></div>
+<ng-template *ngIf="isUSDataLoading;then showLoader else usStateComponent"></ng-template>    
+<ng-template #showLoader>
+    <div class="loader-position">
+        <mat-spinner diameter="40"></mat-spinner>
+    </div>
+</ng-template>
+<ng-template #usStateComponent>
+</ng-template>
+
+
