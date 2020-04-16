@@ -6,14 +6,6 @@
       [style.background]="tile.color"
       class="grid-box-shadow">
 
-
-    <!-- <div *ngIf="tile.text === 'total-confirmed'">
-      <app-total-confirmed
-        [tile_name]="tile.desc"
-        [total]="world_total[0].confirmed">
-      </app-total-confirmed>
-    </div> -->
-
     <div *ngIf="tile.text === 'total-confirmed'">
       <ng-template *ngIf="isWorldTotalLoading;then showLoader else worldTotalComponent"></ng-template>    
       <ng-template #showLoader>
@@ -29,14 +21,6 @@
       </ng-template>
     </div>
 
-    <!-- <div *ngIf="tile.text === 'total-country-confirmed'" style="height: inherit;overflow: scroll;">
-      <div class="grid-header-style">
-          {{tile.desc}}
-      </div>
-      <app-total-country-confirmed
-        [confirmed_total_list]="countries_total_confirmed">
-      </app-total-country-confirmed>
-    </div> -->
     <div *ngIf="tile.text === 'total-country-confirmed'" style="height: inherit;overflow: scroll;">
       <ng-template *ngIf="isCountriesTotalConfirmedLoading;then showLoader else totalCountryConfirmedComponent"></ng-template>    
       <ng-template #showLoader>
@@ -53,18 +37,6 @@
         </app-total-country-confirmed>
       </ng-template>
     </div>
-
-    <!-- <div *ngIf="tile.text === 'total-country-deaths'" style="height: inherit;overflow: scroll;">
-        <div class="grid-header-style">
-            {{tile.desc}}
-            <div class="large-digit">
-              {{world_total[0].deaths}}
-            </div>
-        </div>
-        <app-total-country-deaths
-          [confirmed_total_list]="countries_total_deaths">
-        </app-total-country-deaths>
-    </div> -->
 
     <div *ngIf="tile.text === 'total-country-deaths'" style="height: inherit;overflow: scroll;">
       <ng-template *ngIf="isCountriesTotalDeathsLoading;then showLoader else totalCountryDeathsComponent"></ng-template>    
@@ -85,19 +57,7 @@
         </app-total-country-deaths>
       </ng-template>
     </div>
-    
-
-    <!-- <div *ngIf="tile.text === 'total-country-recovered'" style="height: inherit;overflow: scroll;">
-        <div class="grid-header-style">
-            {{tile.desc}}
-            <div class="large-digit color-green">
-              {{world_total[0].recovered}}
-            </div>
-        </div>
-        <app-total-country-recovered
-          [confirmed_total_list]="countries_total_recovered">
-        </app-total-country-recovered>
-    </div>-->
+  
 
     <div *ngIf="tile.text === 'total-country-recovered'" style="height: inherit;overflow: scroll;">
       <ng-template *ngIf="isCountriesTotalRecoveredLoading;then showLoader else totalCountryRecoveredComponent"></ng-template>    
@@ -119,14 +79,6 @@
       </ng-template>
     </div>
     
-    <!-- <div *ngIf="tile.text === 'timeseries-confirmed'" style="height: inherit;overflow: scroll;">
-      <div class="grid-header-style">
-          {{tile.desc}}
-      </div>
-      <app-line-chart-confirmed
-        [timeseries_confirmed]="timeSeries_confirmed_data">
-      </app-line-chart-confirmed>
-    </div> -->
 
     <div *ngIf="tile.text === 'timeseries-confirmed'" style="width: 100%;">
       <ng-template *ngIf="isTimeSeriesConfirmedDataLoading;then showLoader else showGraphCompoenent"></ng-template>    
@@ -136,9 +88,6 @@
           </div>
       </ng-template>
       <ng-template #showGraphCompoenent>
-        <!-- <div class="grid-header-style">
-            {{tile.desc}}
-        </div>  --> 
         <app-line-chart-confirmed
           [timeseries_confirmed]="timeSeries_confirmed_data">
         </app-line-chart-confirmed>
@@ -153,9 +102,6 @@
           </div>
       </ng-template>
       <ng-template #showGraphCompoenent>
-        <!-- <div class="grid-header-style">
-            {{tile.desc}}
-        </div>  --> 
         <app-line-chart-deaths-recovered
           [timeseries_dr]="obj_death_recovered">
         </app-line-chart-deaths-recovered>

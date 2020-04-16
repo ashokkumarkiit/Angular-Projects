@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CovidService } from 'src/app/covid.service';
 import * as c3 from 'c3';
 
 @Component({
@@ -14,7 +13,7 @@ export class LineChartDeathsRecoveredComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.timeseries_dr)
+    // console.log(this.timeseries_dr)
   }
 
   ngAfterViewInit() {
@@ -22,14 +21,14 @@ export class LineChartDeathsRecoveredComponent implements OnInit {
       bindto: '#chart1',
       data: {
         x: 'x',
-        xFormat: '%m-%d-%Y', // '%Y%m%d',
+        xFormat: '%m-%d-%Y',
         json: JSON.parse(JSON.stringify(this.timeseries_dr)),
         names: {
           total_deaths: 'Deaths',
           total_recovered: 'Recovered'
         },
         keys: {
-            x: 'report_date', // it's possible to specify 'x' when category axis
+            x: 'report_date',
             value: ['total_deaths','total_recovered'],
         }
       },

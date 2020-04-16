@@ -1,6 +1,4 @@
 const express = require('express');
-const path = require('path');
-const us_states = require('./us-states.json');
 
 const { Pool } = require('pg')
 

@@ -39,8 +39,6 @@ export class CovidReportComponent implements OnInit {
   isCountriesTotalRecoveredLoading:Boolean =  false;
   world_total: WorldTotal[];
   isWorldTotalLoading:Boolean = false;
-  // map_data: MapData[];
-  // isMapDataLoading: Boolean = false;
   timeSeries_confirmed_data: TimeSeries[];
   isTimeSeriesConfirmedDataLoading: Boolean = false;
   timeSeries_dr_data: TimeSeriesDRContainer;
@@ -53,19 +51,8 @@ export class CovidReportComponent implements OnInit {
 
   ngOnInit() {
     // Initialization Logic
-    /* this.getCountriesTotalConfirmed();
-    this.getCountriesTotalDeaths();
-    this.getCountriesTotalRecovered();
-    this.getWorldTotal();
-    this.getWorldLocations();
-    this.getTimeSeriesConfirmed();
-    this.getTimeSeriesDeathsRecovered();*/
-    // console.log("Inside Home - ", this.map_data);
 
     this.loadWebsiteData();
-    /* this.interval = setInterval(() => { 
-        this.loadWebsiteData(); 
-    }, 5000);*/
     
     interval(60* 1000).subscribe(() => {
       this.loadWebsiteData();
@@ -77,7 +64,6 @@ export class CovidReportComponent implements OnInit {
     this.getCountriesTotalDeaths();
     this.getCountriesTotalRecovered();
     this.getWorldTotal();
-    // this.getWorldLocations();
     this.getTimeSeriesConfirmed();
     this.getTimeSeriesDeathsRecovered();
   }
@@ -122,16 +108,6 @@ export class CovidReportComponent implements OnInit {
     );
   }
 
-  /* getWorldLocations(): void {
-    this.isMapDataLoading = true;
-    this.covidService.getWorldLocations().subscribe(
-      res => {
-        this.isMapDataLoading = false;
-        this.map_data = res.world_location;
-      }
-    );
-  }*/
-
   getTimeSeriesConfirmed(): void {
     this.isTimeSeriesConfirmedDataLoading = true;
     this.covidService.getTimeSeriesConfirmed().subscribe(
@@ -175,32 +151,14 @@ export class CovidReportComponent implements OnInit {
       kvData.set(element.report_date,new_data);
     });
 
-
-    /*
-    this.timeSeries_dr_data.deaths.forEach(element => {
-      let data: TimeSeriesDRCombined;
-      data.report_date = element.report_date;
-      data.totalDeaths = element.total;
-      data.totalRecovered = 0;
-      kvData.set(element.report_date,data);
-    });
-
-    this.timeSeries_dr_data.recovered.forEach(element => {
-      let data: TimeSeriesDRCombined;
-      data = kvData.get(element.report_date);
-      data.totalRecovered = element.total;
-      kvData.set(element.report_date,data);
-    });
-    */
-
-    console.log(kvData);
+    // console.log(kvData);
     
 
     this.timeSeries_dr_data.recovered.forEach(element => {
       this.obj_death_recovered.push(kvData.get(element.report_date));
     });
   
-    console.log(this.obj_death_recovered);
+    // console.log(this.obj_death_recovered);
   }
 
 }

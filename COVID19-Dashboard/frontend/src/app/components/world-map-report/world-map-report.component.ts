@@ -17,12 +17,8 @@ export class WorldMapReportComponent implements OnInit {
   constructor(private covidService: CovidService) { }
 
   ngOnInit() {
-    // console.log("Inside world-map-report component - ", this.map_data);
-    // this.renderMap();
-    // let map = new Datamap({element: document.getElementById('container')});
     this.getWorldLocations();
-    // this.renderMap();
-    interval(5*1000).subscribe(() => {
+    interval(60*1000).subscribe(() => {
       this.getWorldLocations();
     });
   }
@@ -39,8 +35,11 @@ export class WorldMapReportComponent implements OnInit {
   }
 
   renderMap() {
-    document.getElementById('container').innerHTML = "";
-    var bombMap = new Datamap({
+    if(document.getElementById('container').innerHTML != null) {
+      document.getElementById('container').innerHTML = "";
+    }
+    
+    var bubbleMap = new Datamap({
       element: document.getElementById('container'),
       scope: 'world',
       geographyConfig: {
@@ -67,14 +66,7 @@ export class WorldMapReportComponent implements OnInit {
       fills: {
           'grey': 'rgb(210, 210, 210)',
           'bubbleColorLightRed': 'ff562a',
-          /* 'RUS': '#9467bd',
-          'PRK': '#ff7f0e',
-          'PRC': '#2ca02c',
-          'IND': '#e377c2',
-          'GBR': '#8c564b',
-          'FRA': '#d62728',
-          'PAK': '#7f7f7f',*/
-          defaultFill: 'rgb(210, 210, 210)'// '#ff562a'
+          defaultFill: 'rgb(210, 210, 210)'
       },
       data: {
           'RUS': {fillKey: 'light_red'},
@@ -88,43 +80,10 @@ export class WorldMapReportComponent implements OnInit {
       }
     });
   
-    var bombs = this.map_data;
-    // console.log(bombs);
-    /* [{
-      name: 'Joe 4',
-      radius: 25,
-      yield: 400,
-      country: 'USSR',
-      fillKey: 'RUS',
-      significance: 'First fusion weapon test by the USSR (not "staged")',
-      date: '1953-08-12',
-      latitude: 50.07,
-      longitude: 78.43
-    },{
-      name: 'RDS-37',
-      radius: 40,
-      yield: 1600,
-      country: 'USSR',
-      fillKey: 'RUS',
-      significance: 'First "staged" thermonuclear weapon test by the USSR (deployable)',
-      date: '1955-11-22',
-      latitude: 50.07,
-      longitude: 78.43
-
-    },{
-      name: 'Tsar Bomba',
-      radius: 20,
-      yield: 50000,
-      country: 'USSR',
-      fillKey: 'RUS',
-      significance: 'Largest thermonuclear weapon ever tested—scaled down from its initial 100 Mt design by 50%',
-      date: '1961-10-31',
-      latitude: 73.482,
-      longitude: 54.5854
-    }
-  ];*/
-  //draw bubbles for bombs
-  bombMap.bubbles(bombs, {
+    var data_bubbles = this.map_data;
+    
+  //draw bubbles for available data
+  bubbleMap.bubbles(data_bubbles, {
       popupTemplate: function (geo, data) {
               return ['<div class="hoverinfo"> Location: ' +  data.province_state.trim() !== "" ? data.country_region + '('+data.province_state + ')' : data.country_region,
               '<br/>Confirmed: ' +  data.confirmed + '',

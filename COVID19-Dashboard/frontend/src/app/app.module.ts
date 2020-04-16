@@ -7,7 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 import { ScrollDispatchModule } from '@angular/cdk/scrolling';
 
 
@@ -68,7 +67,6 @@ import { UsStateReportComponent } from './components/us-state-report/us-state-re
     MatListModule,
     SatDatepickerModule,
     SatNativeDateModule,
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyCIgk-WnRPk3W6SMK7RKFlLvgMDG_WdWPw' + '&libraries=visualization'}),
     FormsModule,
     NgbModule,
     MatCheckboxModule,
@@ -77,7 +75,7 @@ import { UsStateReportComponent } from './components/us-state-report/us-state-re
     MatProgressSpinnerModule
   ],
 
-  providers: [GoogleMapsAPIWrapper],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
