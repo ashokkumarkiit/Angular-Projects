@@ -1,7 +1,5 @@
-import { map } from 'rxjs/operators';
 import { TimeSeries } from './../../timeseries-data';
 import { interval } from 'rxjs'
-import { MapData } from './../../map-data';
 import { Component, OnInit } from '@angular/core';
 import { CovidService } from './../../covid.service';
 import { CountriesTotal } from 'src/app/countries-total';

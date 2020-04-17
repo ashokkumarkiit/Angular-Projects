@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -19,8 +18,6 @@ import { MatToolbarModule, MatFormFieldModule,
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CovidReportComponent } from './components/covid-report/covid-report.component';
@@ -65,8 +62,6 @@ import { UsStateReportComponent } from './components/us-state-report/us-state-re
     MatSnackBarModule,
     MatGridListModule,
     MatListModule,
-    SatDatepickerModule,
-    SatNativeDateModule,
     FormsModule,
     NgbModule,
     MatCheckboxModule,
