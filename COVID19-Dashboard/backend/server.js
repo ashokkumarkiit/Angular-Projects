@@ -156,13 +156,13 @@ router.route('/world-locations').get((req, res) => {
       // console.log(max_val);
     })
     
-    pool.query(`select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
-    from covid_daily_report where (longitude != 0.0 or latitude != 0.0)
+    pool.query(`select province_state,country_region, confirmed, deaths, recovered, lat as latitude, long_ as longitude
+    from covid_daily_report where (long_ != 0.0 or lat != 0.0)
     and country_region != 'US'
 	UNION
-select province_state,country_region, confirmed, deaths, recovered, latitude, longitude 
+select province_state,country_region, confirmed, deaths, recovered, lat as latitude, long_ as longitude
     from covid_daily_report_us 
-    where (longitude != 0.0 or latitude != 0.0)
+    where (long_ != 0.0 or lat != 0.0)
     and country_region = 'US'`, null, (error, results) => {
       if (error) {
         throw error

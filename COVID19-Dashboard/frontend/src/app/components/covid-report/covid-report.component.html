@@ -49,7 +49,7 @@
         <div class="grid-header-style">
           {{tile.desc}}
           <div class="large-digit">
-            {{world_total[0].deaths}}
+            {{world_total != null ? world_total[0].deaths : '0' }}
           </div>
         </div>
         <app-total-country-deaths
@@ -70,7 +70,7 @@
         <div class="grid-header-style">
           {{tile.desc}}
           <div class="large-digit color-green">
-            {{world_total[0].recovered}}
+            {{world_total != null ? world_total[0].recovered : '0' }}
           </div>
         </div>
         <app-total-country-recovered
