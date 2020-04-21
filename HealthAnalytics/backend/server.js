@@ -27,6 +27,8 @@
 
 const express = require('express');
 
+const axios = require('axios');
+
 var pg = require('pg');
 const { Pool } = require('pg')
 
@@ -35,7 +37,7 @@ var bodyParser = require('body-parser');
 // Connect to PostgreSQL server
 //use default user name as postgres for the below
 
-var conString = "pg://postgres:ashok0898@127.0.0.1:5432/uml_project";
+var conString = "pg://postgres:root@127.0.0.1:5432/uml_project";
 
 
 
@@ -46,7 +48,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'uml_project',
-  password: 'ashok0898',
+  password: 'root',
   port: 5432,
 });
 
@@ -69,10 +71,9 @@ router.all('*', function (req, res, next) {
 
 
 var exercise_category = [];
-var exercises_found = [];
-var exercise_detail = [];
-var exercise_muscles = [];
-var exercise_equipments = [];
+var places_found = [];
+const API_KEY = 'AIzaSyCIgk-WnRPk3W6SMK7RKFlLvgMDG_WdWPw';
+
 
 router.route('/exercise/category').get((req, res) => {
 
@@ -81,8 +82,7 @@ router.route('/exercise/category').get((req, res) => {
       name: 'fetch-exercise-category',
       text: 'select * from exercisecategory order by name'
     }
-    // Just to check for the try-catch block working or not
-    // throw new Error('Uh oh!');
+
     find_exercise_category_from_wger(query).then(function (response) {
         res.json(
           {
@@ -114,20 +114,6 @@ router.route('/exercises/:id').get((req, res) => {
           'exercises': results.rows,
         });
     })
-    /* 
-    const query = {
-        name: 'fetch-exercises',
-        text: `select * from exercise where upper(name) not in('',upper('test'),upper('Abcd'),upper('Awesome')) and category=${id} and language=2 order by name;`,
-    }
-    console.log(query)
-
-    find_exercises_from_wger(query).then(function (response) {
-        res.json(
-          { 
-            'success': true,
-            'exercises': exercises_found,
-          });
-    }); */
   }
   catch(ex) {
     res.json({
@@ -154,23 +140,7 @@ router.route('/exercise/detail/:id').get((req, res) => {
           'exercise_detail': results.rows,
         });
     })
-    /* 
-    const query = {
-        name: 'fetch-exercise-detail',
-        text: `select e.id,e.name,e.description,ec.name as ex_cat_name
-                from exercise as e, exercisecategory as ec
-                where e.category = ec.id
-                and e. id=${id};`,
-    }
-    console.log(query.text)
 
-    find_exercise_detail_from_wger(query).then(function (response) {
-        res.json(
-          { 
-            'success': true,
-            'exercise_detail': exercise_detail,
-          });
-    }); */
   }
   catch(ex) {
     res.json({
@@ -197,21 +167,6 @@ router.route('/exercise/muscle/:id').get((req, res) => {
         });
     })
 
-    /* 
-    const query = {
-        name: 'fetch-exercise-muscle',
-        text: `select ex_id,mu_id, name, is_front from map_exercise_muscle as em, muscle as m 
-                where em.mu_id = m.id
-                and ex_id=${id};`,
-    }
-
-    find_exercise_muscle_from_wger(query).then(function (response) {
-        res.json(
-          { 
-            'success': true,
-            'exercise_muscle': exercise_muscles,
-          });
-    }); */
   }
   catch(ex) {
     res.json({
@@ -239,27 +194,6 @@ router.route('/exercise/equipment/:id').get((req, res) => {
         });
     })
 
-    /* 
-    const query = {
-        name: 'fetch-exercise-equipment',
-        text: `select ex_id,eq_id,name from 
-                map_exercise_equipment as ee, equipment as eq
-                where ee.eq_id = eq.id
-                and ex_id=$1;`,
-        values: [id]
-    }
-
-    find_exercise_equipment_from_wger(query).then(function (response) {
-      var hits = response;  
-      console.log(response);
-      res.json(
-        { 
-          'success': true,
-          'exercise_equipment': exercise_equipments,
-        });
-      console.log(exercise_equipments)
-      exercise_equipments = []
-    }); */
   }
   catch(ex) {
     res.json({
@@ -269,21 +203,49 @@ router.route('/exercise/equipment/:id').get((req, res) => {
   }
 });
 
-async function find_exercises_from_wger(query) {
-	const response = await pgClient.query(query);
-  exercises_found = [];
+router.route('/search/fitness/').get((req, res) => {
+  try{  
+    places_api().then(function (response) {
+        res.json(
+          {
+            'success': true,
+            'search_result': places_found,
+          });
+    });
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
 
-    response.rows.forEach(element => {
-      var exercise = {
-        "id": element.id,
-        "name": element.name,
-        "description": element.description
+async function places_api() {
+  
+  try {
+    let api_result = await axios.get("https://maps.googleapis.com/maps/api/place/textsearch/json?key="+API_KEY+"&type=gym")
+    // console.log(api_result)
+
+    api_result.data.results.forEach(item => {
+      // console.log(item);
+      var place = {
+        "formatted_address": item.formatted_address,
+        "latitude": item.geometry.location.lat,
+        "longitude": item.geometry.location.lng,
+        "name": item.name,
+        "photos_url": item.photos && item.photos.length > 0 ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+item.photos[0].photo_reference+ "&key="+API_KEY : '',
+        "rating": item.rating,
+        "total_user_rating": item.total_user_rating,
       };
+      places_found.push(place);
+    });
 
-      exercises_found.push(exercise);
-    }); 
-    // return exercises_found;
+  } catch (error) {
+    console.error(error)
+  }
 }
+
 
 
 async function find_exercise_category_from_wger(query) {
@@ -297,71 +259,14 @@ async function find_exercise_category_from_wger(query) {
 
       exercise_category.push(exercise_cat);
     }); 
-    // return exercise_category;
 }
 
-async function find_exercise_detail_from_wger(query) {
-  console.log(query)
-  let response = await pgClient.query(query);
-  console.log(response);
-  exercise_detail = [];
-    response.rows.forEach(element => {
-      var exercise = {
-        "id": element.id,
-        "name": element.name,
-        "description": element.description,
-        "ex_cat_name": element.ex_cat_name
-      };
 
-      exercise_detail.push(exercise);
-    }); 
-    // return exercise_detail;
-}
-
-async function find_exercise_muscle_from_wger(query) {
-	const response = await pgClient.query(query);
-  exercise_muscles = [];
-    response.rows.forEach(element => {
-      var exercise_muscle = {
-        "ex_id": element.ex_id,
-        "mu_id": element.mu_id,
-        "name": element.name,
-        "is_front": element.is_front
-      };
-
-      exercise_muscles.push(exercise_muscle);
-    }); 
-    // return exercise_muscles;
-}
-
-async function find_exercise_equipment_from_wger(query) {
-	const response = await pgClient.query(query);
-  exercise_equipments = [];
-    response.rows.forEach(element => {
-      var exercise_equipment = {
-        "ex_id": element.ex_id,
-        "eq_id": element.mu_id,
-        "name": element.name
-      };
-
-      exercise_equipments.push(exercise_equipment);
-    }); 
-    // return exercise_equipments;
-}
 
 app.use('/', router);
 
-app.listen(4000, () => {
-
-            console.log('Make sure you execute following command before you start the Angular client');
-
-            console.log('');            
-            //console.log('--------------------------------------------------------');
-
-            // console.log('curl -H "Content-Type: application/json" -XPUT "http://localhost:9200/divvy_station_logs/_settings"  -d "{\"index\":{\"max_result_window\":10000000}}"');
-
+app.listen(4000, () => {           
             console.log('--------------------------------------------------------');
             console.log('');
-
             console.log('Express server running on port 4000')
 });
