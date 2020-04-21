@@ -160,7 +160,7 @@ export class PlacesService {
 
          }
          });
-    }, 30000);
+    }, 2*60*1000);
     });
   }
 

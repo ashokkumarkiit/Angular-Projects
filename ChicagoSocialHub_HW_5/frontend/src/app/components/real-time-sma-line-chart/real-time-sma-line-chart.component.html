@@ -38,15 +38,15 @@
             <mat-icon>keyboard_backspace</mat-icon>
         </button>
         <h4 style="margin-left: 27px;">{{title}}</h4>
-        <ng-template *ngIf="isSmaLineChartDataLoading;then showLoader else showLineSVG"></ng-template>    
+        <ng-template *ngIf="isSmaLineChartDataLoading;then showLoader else showSMALineSVG"></ng-template>    
         <ng-template #showLoader>
             <div class="loader-position">
               <mat-spinner diameter="40"></mat-spinner>
             </div>
         </ng-template>
-        <ng-template #showLineSVG>
+        <ng-template #showSMALineSVG>
         </ng-template>
-        <svg width="1200" height="700" id="svg"></svg>
+        <svg width="1200" height="700" id="svg_sma"></svg>
     
     </div>
     

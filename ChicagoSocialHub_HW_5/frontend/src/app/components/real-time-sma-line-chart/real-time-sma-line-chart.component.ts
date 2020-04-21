@@ -93,9 +93,9 @@ export class RealTimeSMALineComponent implements OnInit {
 
     ngOnInit() {
 
-     if (this.LineChart !== undefined) {
+     /* if (this.LineChart !== undefined) {
               this.LineChart.unsubscribe();
-     }
+     }*/
 
      this.timeRangeSelected = '1 HOUR';
      this.stationNameSelected = this.placesService.stationNameSelected;
@@ -117,13 +117,13 @@ export class RealTimeSMALineComponent implements OnInit {
    ///////////////////////////////////////////////////////////////////////
 
    createPriodicTaskToPullStationDataFromServer(){
-    if (this.LineChart !== undefined) {
+    /* if (this.LineChart !== undefined) {
             this.LineChart.unsubscribe();
-    }
+    }*/
 
     this.placesService.getStationSelected().subscribe((data: Station) => {
       this.stationSelected = data;
-      console.log("StationSelected-",data);
+      // console.log("StationSelected-",data);
       this.LineChart = this.placesService.pulledNewStationDocksDataFromServer(this.placesService.stationNameSelected, this.timeRangeSelected).subscribe(res => {
         this.create_d3_chart(this.placesService.stationNameSelected,this.placesService,this.timeRangeSelected);
       });
@@ -148,9 +148,9 @@ export class RealTimeSMALineComponent implements OnInit {
 
 
    create_d3_chart(stationName, placesService, timeRange) {
-     if (this.LineChart !== undefined) {
+     /*if (this.LineChart !== undefined) {
               this.LineChart.unsubscribe();
-     }
+     }*/
 
      this.stationNameSelected = stationName;
      this.title = 'Divvy Dock Station:    ' + this.stationNameSelected;
@@ -163,6 +163,7 @@ export class RealTimeSMALineComponent implements OnInit {
    movingAverage = (data, hourInterval) => {
     var data_sma = []
     const data_distinct = [];
+    // console.log(data);
     const map = new Map();
     for (const item of data) {
         if(!map.has(item.lastCommunicationTime)){
@@ -173,7 +174,6 @@ export class RealTimeSMALineComponent implements OnInit {
             });
         }
     }
-    // console.log(data_distinct)
 
     /* let d = new Date("2020-04-03 11:33:34");
     console.log("d.getHours()", d.getHours())
@@ -202,7 +202,6 @@ export class RealTimeSMALineComponent implements OnInit {
             availableDocks: avg
         })
     }
-    console.log(data_sma)
     return data_sma
 
   }
@@ -218,11 +217,12 @@ export class RealTimeSMALineComponent implements OnInit {
         placesService
           .getDocks()
              .subscribe((data: Dock[]) => {
-                   this.isSmaLineChartDataLoading = false;
+                   
                    this.docks = data;
                    this.docks_sma_1 = this.movingAverage(this.docks,1);
                    this.docks_sma_24 = this.movingAverage(this.docks,24);
-                   // console.log(this.docks);
+                   console.log(this.docks);
+                   this.isSmaLineChartDataLoading = false;
                    this.updateChart();
                    this.initSvg();
                    this.initAxis();
@@ -239,7 +239,7 @@ export class RealTimeSMALineComponent implements OnInit {
 
 
    private initSvg() {
-        this.svg = d3.select('#svg')
+        this.svg = d3.select('#svg_sma')
             .append('g')
             .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
    }
@@ -570,7 +570,7 @@ export class RealTimeSMALineComponent implements OnInit {
 
    private updateChart() {
 
-      let chart = d3.select('#svg').select('g').remove().exit();
+      let chart = d3.select('#svg_sma').select('g').remove().exit();
 
 
    }
@@ -584,8 +584,8 @@ export class RealTimeSMALineComponent implements OnInit {
 
    ngOnDestroy() {
 
-     if (this.LineChart !== undefined) {
-             this.LineChart.unsubscribe();
+     if (this.SMALineChart !== undefined) {
+             this.SMALineChart.unsubscribe();
      }
 
    }
