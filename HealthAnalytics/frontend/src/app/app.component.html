@@ -8,15 +8,37 @@
 
 
   <span class="fill-remaining-space"></span>
-
+  <a routerLink="/analytics" class="hyperlink-no-style">
+    <span class="span-btn-with-icon">
+      <span style="font-size: 15px">Health Analytics</span>
+      &nbsp;
+      <mat-icon >directions_run</mat-icon>
+    </span>
+  </a>
+  &nbsp; &nbsp; &nbsp;
+  <a routerLink="/search" class="hyperlink-no-style">
+    <span class="span-btn-with-icon">
+      <span style="font-size: 15px">Search Portal</span>
+      &nbsp;
+      <mat-icon >search</mat-icon>
+    </span>
+  </a>
+  &nbsp; &nbsp; &nbsp;
+  <a routerLink="/workout" class="hyperlink-no-style">
+    <span class="span-btn-with-icon">
+      <span style="font-size: 15px">Workout Portal</span>
+      &nbsp;
+      <mat-icon >fitness_center</mat-icon>
+    </span>
+  </a>
 </mat-toolbar>
 
 
 <div>
-  <nav class="padding-20">
+  <!-- <nav class="padding-20">
     <a routerLink="/analytics" class="header-tab">Health Analytics</a>
     <a routerLink="/search" class="header-tab">Search Portal</a>
     <a routerLink="/workout" class="header-tab">Workout Portal</a>
-  </nav>
+  </nav> -->
   <router-outlet></router-outlet>
 </div>

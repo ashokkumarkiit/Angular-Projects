@@ -203,9 +203,12 @@ router.route('/exercise/equipment/:id').get((req, res) => {
   }
 });
 
-router.route('/search/fitness/').get((req, res) => {
+router.route('/search/fitness/:lat/:lng/:rad').get((req, res) => {
   try{  
-    places_api().then(function (response) {
+    var lat = req.params.lat;
+    var lng = req.params.lng;
+    var rad = req.params.rad;  
+    places_api(lat,lng,rad).then(function (response) {
         res.json(
           {
             'success': true,
@@ -221,12 +224,13 @@ router.route('/search/fitness/').get((req, res) => {
   }
 });
 
-async function places_api() {
+async function places_api(lat,lng,rad) {
   
   try {
-    let api_result = await axios.get("https://maps.googleapis.com/maps/api/place/textsearch/json?key="+API_KEY+"&type=gym")
+    let url = "https://maps.googleapis.com/maps/api/place/textsearch/json?key="+API_KEY+"&type=gym&location="+lat+","+lng+"&radius="+rad;
+    let api_result = await axios.get(url)
     // console.log(api_result)
-
+    places_found = []
     api_result.data.results.forEach(item => {
       // console.log(item);
       var place = {

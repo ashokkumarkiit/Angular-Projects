@@ -1,3 +1,52 @@
-<p>
-  search works!
-</p>
+<div class="padding-20">
+  <h2 class="content-padding-left">Search Portal - Fitness Centers</h2>
+  <mat-divider></mat-divider>
+  <mat-grid-list cols="12" rowHeight="100px" [gutterSize]="'0px'">
+    <mat-grid-tile
+        *ngFor="let tile of tiles"
+        [colspan]="tile.cols"
+        [rowspan]="tile.rows"
+        [style.background]="tile.color"
+        class="grid-box-shadow">
+          
+        <div *ngIf="tile.text === 'search-input'">
+          <AutocompleteComponent (setAddress)="getAddress($event)" adressType="geocode"></AutocompleteComponent>
+        </div>
+
+        <div *ngIf="tile.text === 'search-radius'" style="text-align: right">
+          <mat-form-field>
+            <mat-select [(value)]="selected" placeholder="Radius">
+              <mat-option value="5000">5 Miles</mat-option>
+              <mat-option value="10000">10 Miles</mat-option>
+              <mat-option value="20000">20 Miles</mat-option>
+              <mat-option value="35000">35 Miles</mat-option>
+              <mat-option value="45000">45 Miles</mat-option>
+              <mat-option value="50000">50 Miles</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="tile.text === 'search-button'">
+          <button mat-raised-button color="primary" (click)="callSearchAPI()">Search</button>
+        </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <mat-divider></mat-divider>
+  <ng-template *ngIf="isSearching;then showLoader else showFitnessList"></ng-template>    
+  <ng-template #showLoader>
+      <div class="loader-position">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+  </ng-template>
+  <ng-template #showFitnessList>
+    <mat-list class="content-padding">
+      <mat-list-item *ngFor="let fitness of fitnesses">
+              <a class="list-item-style">
+                  <app-search-item
+                    [fitness]="fitness">
+                  </app-search-item>
+              </a>
+              <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </ng-template>
+</div>

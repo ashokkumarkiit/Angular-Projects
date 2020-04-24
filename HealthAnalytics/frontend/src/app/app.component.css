@@ -1,29 +1,47 @@
 .mat-toolbar {
-    background:purple;
-    color: white;
+  background:purple;
+  color: white;
 
 }
 
 
-  .fill-remaining-space {
-    /* This fills the remaining space, by using flexbox. 
-       Every toolbar row uses a flexbox row layout. */
-    text-align: center;
-    flex: 1 1 auto;
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox. 
+     Every toolbar row uses a flexbox row layout. */
+  text-align: right;
+  flex: 1 1 auto;
 
-  }
+}
 
 
 .padding-20 {
-  padding:20px;
+padding:20px;
 }
 
 .header-tab {
-  padding: 10px;
-  background: grey;
-  margin: 5px;
-  border-radius: 5px;
-  color: white;
-  font-weight: 500;
-  text-decoration: none;
+padding: 10px;
+background: grey;
+margin: 5px;
+border-radius: 5px;
+color: white;
+font-weight: 500;
+text-decoration: none;
+}
+
+.span-btn-with-icon {
+display: flex;
+align-items: center;
+border: 1px solid white;
+border-radius: 15px;
+padding: 0px 10px;
+}
+
+.span-btn-with-icon:hover {
+background: white;
+color: purple;
+}
+
+.hyperlink-no-style {
+text-decoration: none;
+color: white;
 }

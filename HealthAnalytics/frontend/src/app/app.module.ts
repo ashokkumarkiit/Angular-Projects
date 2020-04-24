@@ -30,7 +30,7 @@ import { MatToolbarModule, MatFormFieldModule,
     MatCheckboxModule, MatInputModule,
     MatOptionModule, MatSelectModule, MatIconModule, MatButtonModule,
     MatCardModule, MatTableModule, MatDividerModule, MatSnackBarModule,
-    MatGridListModule, MatListModule } from '@angular/material';
+    MatGridListModule, MatListModule, MatProgressSpinnerModule  } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,6 +57,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { ExercisesComponent } from './components/exercises/exercises.component';
 import { ExerciseDetailComponent } from './components/exercise-detail/exercise-detail.component';
 import { HealthAnalyticsComponent } from './components/health-analytics/health-analytics.component';
+import { SearchItemComponent } from './components/search-item/search-item.component';
+import { AutocompleteComponent } from './components/google-places.component';
 
 
 
@@ -94,6 +96,8 @@ import { HealthAnalyticsComponent } from './components/health-analytics/health-a
     ExercisesComponent,
     ExerciseDetailComponent,
     HealthAnalyticsComponent,
+    SearchItemComponent,
+    AutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -114,6 +118,7 @@ import { HealthAnalyticsComponent } from './components/health-analytics/health-a
     MatSnackBarModule,
     MatGridListModule,
     MatListModule,
+    MatProgressSpinnerModule,
     SatDatepickerModule,
     SatNativeDateModule,
 
