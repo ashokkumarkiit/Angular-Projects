@@ -42,7 +42,9 @@ export class SearchService {
         navigator.geolocation.getCurrentPosition((position) => {
           // this.showPosition(position);
           console.log("position", position);
-          observer.next({geo_pos: position});
+          this.longitude = position.coords.longitude;
+          this.latitude = position.coords.latitude
+          observer.next({position});
           observer.complete();
         });
       } else {

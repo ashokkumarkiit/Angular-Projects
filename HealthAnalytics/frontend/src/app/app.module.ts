@@ -30,7 +30,7 @@ import { MatToolbarModule, MatFormFieldModule,
     MatCheckboxModule, MatInputModule,
     MatOptionModule, MatSelectModule, MatIconModule, MatButtonModule,
     MatCardModule, MatTableModule, MatDividerModule, MatSnackBarModule,
-    MatGridListModule, MatListModule, MatProgressSpinnerModule  } from '@angular/material';
+    MatGridListModule, MatListModule, MatProgressSpinnerModule, MatTabsModule  } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -118,6 +118,7 @@ import { AutocompleteComponent } from './components/google-places.component';
     MatSnackBarModule,
     MatGridListModule,
     MatListModule,
+    MatTabsModule,
     MatProgressSpinnerModule,
     SatDatepickerModule,
     SatNativeDateModule,

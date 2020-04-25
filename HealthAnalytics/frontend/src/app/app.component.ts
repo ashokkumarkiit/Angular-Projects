@@ -18,8 +18,6 @@ export class AppComponent {
   }
 
   callHomePage() {
-    console.log('called find');
-    this.registerView = 'regView2';
-    this.router.navigate(['/find']);
+    // this.router.navigate(['/analytics']);
   }
 }

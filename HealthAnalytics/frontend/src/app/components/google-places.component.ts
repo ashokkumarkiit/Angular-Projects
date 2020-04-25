@@ -1,7 +1,7 @@
+/// <reference types="@types/googlemaps" />
 import { SearchService } from './../search.service';
 import { Component, ViewChild, EventEmitter, Output, OnInit, AfterViewInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { } from '@types/googlemaps';
 
 @Component({
     selector: 'AutocompleteComponent',
@@ -43,14 +43,13 @@ export class AutocompleteComponent implements OnInit, AfterViewInit {
             });
         google.maps.event.addListener(autocomplete, 'place_changed', () => {
             const place = autocomplete.getPlace();
+            this.searchService.longitude = autocomplete.getPlace().geometry.location.lng();
+            this.searchService.latitude = autocomplete.getPlace().geometry.location.lat();
             this.invokeEvent(place);
         });
     }
 
     invokeEvent(place: Object) {
-        console.log(place.geometry.location.lat(), place.geometry.location.lng())
-        this.searchService.longitude = place.geometry.location.lng();
-        this.searchService.latitude = place.geometry.location.lat();
         this.setAddress.emit(place);
     }
 

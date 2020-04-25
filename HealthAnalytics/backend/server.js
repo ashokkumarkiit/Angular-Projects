@@ -224,6 +224,81 @@ router.route('/search/fitness/:lat/:lng/:rad').get((req, res) => {
   }
 });
 
+/*********************** START - ANALYTICS API **************************/
+router.route('/analytics/category').get((req, res) => {
+  try{
+
+    pool.query(`select distinct class as option_value from chronic where class is not null;`,
+     null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'select_value': results.rows,
+        });
+    })
+
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/analytics/year').get((req, res) => {
+  try{
+
+    pool.query(`select distinct yearstart as option_value from chronic where yearstart is not null order by option_value asc;`,
+     null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'select_value': results.rows,
+        });
+    })
+
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/analytics/subview/:type').get((req, res) => {
+  try{
+    var type = req.params.type;
+    let query = "select distinct "+ type +" as option_value from chronic where "+ type +" is not null order by option_value;";
+    pool.query(query,null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'select_value': results.rows,
+        });
+    })
+
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+/*********************** END - ANALYTICS API **************************/
+
 async function places_api(lat,lng,rad) {
   
   try {

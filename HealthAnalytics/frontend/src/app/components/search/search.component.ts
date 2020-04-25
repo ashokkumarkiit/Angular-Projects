@@ -19,7 +19,7 @@ export interface Tile {
 export class SearchComponent implements OnInit {
 
   fitnesses: Fitness[];
-  pos: Position;
+  pos: Location;
 
   address: Object;
   establishmentAddress: Object;
@@ -137,9 +137,6 @@ export class SearchComponent implements OnInit {
   getCurrentLocation() {
     this.searchService.getCurrentLocation().subscribe(
       res => {
-        this.pos = res.geo_pos;
-        this.searchService.latitude = this.pos.coords.latitude;
-        this.searchService.longitude = this.pos.coords.longitude;
         this.getFitnessByLocation();
       }
     );

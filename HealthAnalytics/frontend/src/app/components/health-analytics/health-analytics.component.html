@@ -1,3 +1,58 @@
-<p>
-  health-analytics works!
-</p>
+<mat-grid-list cols="12" rowHeight="65px" [gutterSize]="'0px'">
+  <mat-grid-tile
+      *ngFor="let tile of tiles"
+      [colspan]="tile.cols"
+      [rowspan]="tile.rows"
+      [style.background]="tile.color"
+      class="grid-box-shadow">
+        
+      <div *ngIf="tile.text === 'filter-category'" style="text-align: right">
+          <mat-form-field>
+            <mat-select [(value)]="selected_category" placeholder="Category">
+              <mat-option *ngFor="let fil_cat of filter_category" [value]="fil_cat.option_value">
+                  {{fil_cat.option_value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>
+
+      <div *ngIf="tile.text === 'filter-year'" style="text-align: right">
+        <mat-form-field>
+          <mat-select [(value)]="selected_year" placeholder="Year">
+              <mat-option *ngFor="let fil_year of filter_year" [value]="fil_year.option_value">
+                  {{fil_year.option_value}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="tile.text === 'filter-button'">
+        <button mat-raised-button color="primary" (click)="callSearchAPI()">Click to Filter</button>
+      </div>
+      <div *ngIf="tile.text === 'filter-viewby'" style="text-align: right">
+          <mat-form-field>
+            <mat-select [(value)]="selected_view" placeholder="View By" (selectionChange)="fetchSubViewByList($event)">
+              <mat-option value="age">Age</mat-option>
+              <mat-option value="gender">Gender</mat-option>
+              <mat-option value="income">Income</mat-option>
+              <mat-option value="education">Education</mat-option>
+              <mat-option value="race_ethnicity">Race & Ethnicity</mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>
+      <div *ngIf="tile.text === 'filter-viewby-sub'" style="text-align: right">
+          <mat-form-field>
+            <mat-select [(value)]="selected_subviewby" placeholder="Sub View by">
+                <mat-option *ngFor="let fil_subview of filter_subview" [value]="fil_subview.option_value">
+                    {{fil_subview.option_value}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>
+
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-divider></mat-divider>
+<mat-tab-group>
+    <mat-tab label="US Map"> Content 1 </mat-tab>
+    <mat-tab label="Bar Chart"> Content 2 </mat-tab>
+</mat-tab-group>
