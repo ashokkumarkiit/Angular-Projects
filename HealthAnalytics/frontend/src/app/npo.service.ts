@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { FitnessResponse } from './fitness';
 import { MapRecords } from './maps-record';
 import { AnalyticsBarchartResponse } from './analytics-bar-chart';
+import { CovidDataResponse } from './covid-prediction-data';
 
 
 const httpOptions = {
@@ -66,6 +67,10 @@ export class NpoService {
         subtype
         }
     });
+  }
+
+  getCovidPredictionData(): Observable<CovidDataResponse> {
+    return this.http.get<CovidDataResponse>(`${this.uri}/analytics/covid/prediction`);
   }
 
 

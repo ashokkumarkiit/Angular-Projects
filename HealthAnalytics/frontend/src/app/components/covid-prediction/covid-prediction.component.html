@@ -1,0 +1,17 @@
+<mat-grid-list cols="12" rowHeight="350px" [gutterSize]="'1px'">
+    <mat-grid-tile
+        *ngFor="let tile of tiles"
+        [colspan]="tile.cols"
+        [rowspan]="tile.rows"
+        [style.background]="tile.color"
+        class="grid-box-shadow">
+          
+        <div *ngIf="tile.text === 'actual-predicted-confirmed'">
+            <div id="chart"></div>
+        </div>
+  
+        <div *ngIf="tile.text === 'actual-predicted-deaths'">
+            <div id="chart1" ></div>
+        </div>
+    </mat-grid-tile>
+  </mat-grid-list>

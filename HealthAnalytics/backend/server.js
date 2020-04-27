@@ -450,15 +450,12 @@ router.route('/analytics/mapdata').get((req, res) => {
 
 router.route('/analytics/barchart').get((req, res) => {
   try{
-    console.log(req.body);
-    console.log(req.query);
 
     let query = `select locationdesc as location, max(data_value) as data_value from chronic
                   where class = '`+ req.query.cat +`' 
                   and yearstart = '`+req.query.year+`' and `+req.query.type+` = '`+req.query.subtype+`' 
                   group by locationdesc
                   order by locationdesc ;`;
-    console.log(query);
     pool.query(query,null, (error, results) => {
       if (error) {
         throw error
@@ -467,6 +464,86 @@ router.route('/analytics/barchart').get((req, res) => {
         { 
           'success': true,
           'barchart_data': results.rows,
+        }
+      );
+    });
+
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+router.route('/analytics/covid/prediction').get((req, res) => {
+  try{
+
+    let query = `select * from (select to_char(to_date(report_date,'yyyy-mm-dd hh24:mi:ss'),'mm-dd-yyyy') as report_date,
+    total,data_type, category from health_analytics_covid_us_confirmed
+Union
+select to_char(to_date(report_date,'yyyy-mm-dd hh24:mi:ss'),'mm-dd-yyyy') as report_date,
+    total,data_type, category from health_analytics_covid_us_deaths) as tbl order by report_date;
+    `;
+    console.log(query);
+    pool.query(query,null, (error, results) => {
+      if (error) {
+        throw error
+      }
+
+      let res_confirmed = []
+      let res_confirmed_predict = []
+      let res_deaths = []
+      let res_deaths_predict = []
+
+      results.rows.map(row => {
+        
+        if(row.category == 'confirmed' && row.data_type == 'actual') {
+          res_confirmed.push({
+            report_date: row.report_date,
+            total: parseInt(row.total),
+            data_type: row.data_type,
+            category: row.category
+          })
+        }
+        if(row.category == 'confirmed' && row.data_type == 'predicted') {
+          res_confirmed_predict.push({
+            report_date: row.report_date,
+            total: parseInt(row.total),
+            data_type: row.data_type,
+            category: row.category
+          })
+        }
+
+        if(row.category == 'death' && row.data_type == 'actual') {
+          res_deaths.push({
+            report_date: row.report_date,
+            total: parseInt(row.total),
+            data_type: row.data_type,
+            category: row.category
+          })
+        }
+
+        if(row.category == 'death' && row.data_type == 'predicted') {
+          res_deaths_predict.push({
+            report_date: row.report_date,
+            total: parseInt(row.total),
+            data_type: row.data_type,
+            category: row.category
+          })
+        }
+        
+      });
+      res.status(200).json(
+        { 
+          'success': true,
+          'covid_data': {
+            confirmed: res_confirmed,
+            confirmed_predict: res_confirmed_predict,
+            deaths: res_deaths,
+            deaths_predict: res_deaths_predict
+          },
         }
       );
     });

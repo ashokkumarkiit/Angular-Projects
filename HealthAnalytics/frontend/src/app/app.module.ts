@@ -61,6 +61,7 @@ import { SearchItemComponent } from './components/search-item/search-item.compon
 import { AutocompleteComponent } from './components/google-places.component';
 import { MapAnalyticsComponent } from './components/map-analytics/map-analytics.component';
 import { BarchartAnalyticsComponent } from './components/barchart-analytics/barchart-analytics.component';
+import { CovidPredictionComponent } from './components/covid-prediction/covid-prediction.component';
 
 
 
@@ -101,7 +102,8 @@ import { BarchartAnalyticsComponent } from './components/barchart-analytics/barc
     SearchItemComponent,
     AutocompleteComponent,
     MapAnalyticsComponent,
-    BarchartAnalyticsComponent
+    BarchartAnalyticsComponent,
+    CovidPredictionComponent
   ],
   imports: [
     BrowserModule,

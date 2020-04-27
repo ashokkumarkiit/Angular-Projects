@@ -1,3 +1,4 @@
+import { CovidPredictionComponent } from './components/covid-prediction/covid-prediction.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { WorkoutComponent } from './components/workout/workout.component';
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'analytics', component: HealthAnalyticsComponent },
   { path: 'exercises/:id', component: ExercisesComponent },
   { path: 'exercise/detail/:id', component: ExerciseDetailComponent },
+  { path: 'covid-prediction', component: CovidPredictionComponent},
   { path: '', redirectTo: '/workout', pathMatch: 'full' },
 ];
 
