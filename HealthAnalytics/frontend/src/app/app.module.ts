@@ -59,6 +59,8 @@ import { ExerciseDetailComponent } from './components/exercise-detail/exercise-d
 import { HealthAnalyticsComponent } from './components/health-analytics/health-analytics.component';
 import { SearchItemComponent } from './components/search-item/search-item.component';
 import { AutocompleteComponent } from './components/google-places.component';
+import { MapAnalyticsComponent } from './components/map-analytics/map-analytics.component';
+import { BarchartAnalyticsComponent } from './components/barchart-analytics/barchart-analytics.component';
 
 
 
@@ -97,7 +99,9 @@ import { AutocompleteComponent } from './components/google-places.component';
     ExerciseDetailComponent,
     HealthAnalyticsComponent,
     SearchItemComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    MapAnalyticsComponent,
+    BarchartAnalyticsComponent
   ],
   imports: [
     BrowserModule,

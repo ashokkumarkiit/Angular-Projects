@@ -26,11 +26,11 @@
         </mat-form-field>
       </div>
       <div *ngIf="tile.text === 'filter-button'">
-        <button mat-raised-button color="primary" (click)="callSearchAPI()">Click to Filter</button>
+        <button mat-raised-button color="primary" (click)="callMapDataAPI()">Click to Filter</button>
       </div>
       <div *ngIf="tile.text === 'filter-viewby'" style="text-align: right">
           <mat-form-field>
-            <mat-select [(value)]="selected_view" placeholder="View By" (selectionChange)="fetchSubViewByList($event)">
+            <mat-select [(value)]="selected_viewby" placeholder="View By" (selectionChange)="fetchSubViewByList($event)">
               <mat-option value="age">Age</mat-option>
               <mat-option value="gender">Gender</mat-option>
               <mat-option value="income">Income</mat-option>
@@ -53,6 +53,39 @@
 </mat-grid-list>
 <mat-divider></mat-divider>
 <mat-tab-group>
-    <mat-tab label="US Map"> Content 1 </mat-tab>
-    <mat-tab label="Bar Chart"> Content 2 </mat-tab>
+    <mat-tab label="US Map">
+      <ng-template matTabContent>
+        <ng-template *ngIf="isMapDataLoaded;then showLoader else showUsMapTab"></ng-template>    
+        <ng-template #showLoader>
+            <div class="loader-position">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+        </ng-template>
+        <ng-template #showUsMapTab>
+            <div>
+                <app-map-analytics
+                [map_data]="map_data"
+                [fill_key]="fill_key"
+                ></app-map-analytics>
+            </div>
+        </ng-template>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Bar Chart">
+        <ng-template matTabContent>
+          <ng-template *ngIf="isBarchartDataLoaded;then showLoader else showUsBarchartTab"></ng-template>    
+          <ng-template #showLoader>
+              <div class="loader-position">
+                <mat-spinner diameter="40"></mat-spinner>
+              </div>
+          </ng-template>
+          <ng-template #showUsBarchartTab>
+              <div>
+                  <app-barchart-analytics
+                  [barchart_data]="barchart_data"
+                  ></app-barchart-analytics>
+              </div>
+          </ng-template>
+        </ng-template>
+    </mat-tab>
 </mat-tab-group>

@@ -1,3 +1,4 @@
+import { AnalyticsBarchart } from 'src/app/analytics-bar-chart';
 import { Component, OnInit } from '@angular/core';
 import { NpoService } from 'src/app/npo.service';
 import { DDLSelect } from 'src/app/analytics-select';
@@ -31,17 +32,23 @@ export class HealthAnalyticsComponent implements OnInit {
   filter_year: DDLSelect[];
   filter_subview: DDLSelect[];
 
-  selected_category:String = '';
-  selected_year:String = '';
-  selected_viewby:String = '';
-  selected_subviewby:String = '';
-  
+  selected_category:String = 'Obesity / Weight Status';
+  selected_year:String = '2018';
+  selected_viewby:String = 'Age';
+  selected_subviewby:String = '45 - 54';
+  map_data: any;
+  fill_key: Number[];
+  isMapDataLoaded: Boolean = false;
+  barchart_data: AnalyticsBarchart[];
+  isBarchartDataLoaded: Boolean = false;
 
   constructor(private npoService: NpoService) { }
 
   ngOnInit() {
     this.getCategory();
     this.getYear();
+    this.getMapData();
+    this.getAnalyticsBarChart();
   }
 
   getCategory() {
@@ -67,6 +74,38 @@ export class HealthAnalyticsComponent implements OnInit {
         this.filter_subview = res.select_value;
     }
   );
+  }  
+  getMapData() {
+    this.isMapDataLoaded = true;
+    this.npoService.getMapData(this.selected_category,
+       this.selected_year, this.selected_viewby,
+        this.selected_subviewby).subscribe(
+      res => {
+        console.log(res);
+        this.isMapDataLoaded = false;
+        this.map_data = res.map_records;
+        this.fill_key = res.fill_key;
+    }
+  );
   }
+
+  callMapDataAPI() {
+    this.getMapData();
+    this.getAnalyticsBarChart();
+  }
+
+  getAnalyticsBarChart() {
+    this.isBarchartDataLoaded = true;
+    this.npoService.getAnalyticsBarChart(this.selected_category,
+       this.selected_year, this.selected_viewby,
+        this.selected_subviewby).subscribe(
+      res => {
+        console.log(res);
+        this.isBarchartDataLoaded = false;
+        this.barchart_data = res.barchart_data;
+      }
+    );
+  }
+
 
 }

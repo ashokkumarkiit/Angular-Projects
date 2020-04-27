@@ -3,13 +3,13 @@ SELECT yearstart, yearend, locationabbr, locationdesc, datasource, class, topic,
 	
 select distinct age from chronic;
 
-select distinct (yearstart,yearend) from chronic;
+select distinct yearstart as year from chronic where yearstart is not null order by year asc;
 
 select distinct class from chronic; -- Category
 
 select distinct topic from chronic; -- Sub Category // Not Required
 
-select distinct education from chronic; -- sub list
+select distinct education as option_value from chronic where education is not null order by option_value; -- sub list
 
 select distinct gender from chronic; -- sub list
 
@@ -20,3 +20,11 @@ select distinct income from chronic; -- Sub list
 select distinct total from chronic; -- Direct Display
 
 select distinct race_ethnicity from chronic; -- Sub List
+
+select * from health_analytics_covid_us;
+
+select locationabbr, min(data_value) as data_value from chronic
+	where topic = 'Obesity / Weight Status' 
+	and yearstart = '2018' and gender = 'Male' 
+	group by locationabbr
+	order by data_value ;

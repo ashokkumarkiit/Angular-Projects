@@ -297,6 +297,190 @@ router.route('/analytics/subview/:type').get((req, res) => {
   }
 });
 
+function splitValues(left, right, parts) {
+  var result = [];
+  var val = right - left;
+  console.log(val);
+  console.log(parts);
+  console.log(val/parts);
+  var delta = val/parts;
+  console.log(delta)
+  while (left < right) {
+      result.push(parseFloat(left.toFixed(1)));
+      left += delta;
+      console.log(result)
+  }
+  result.push(parseFloat(right.toFixed(1)));
+  return result;
+}
+
+router.route('/analytics/mapdata').get((req, res) => {
+  try{
+    console.log(req.body);
+    console.log(req.query);
+
+    let queryForlegendValRange = `select max(data_value) as max_val, min(data_value) as min_val
+		                              from chronic
+                                  where class = '`+ req.query.cat +`' 
+                                  and yearstart = '`+req.query.year+`' and 
+                                  `+req.query.type+` = '`+req.query.subtype+`';`;
+    
+    console.log(queryForlegendValRange);
+    pool.query(queryForlegendValRange,null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      
+      console.log("results - ", results.rows, results.rows);
+      //console.log(splitValues(parseFloat(results.rows[0].min_val),parseFloat(results.rows[0].max_val),4));
+      var split_values = splitValues(parseFloat(results.rows[0].min_val),parseFloat(results.rows[0].max_val),4);
+      console.log(split_values);
+      let query = `select locationabbr, max(data_value) as data_value from chronic
+                  where class = '`+ req.query.cat +`' 
+                  and yearstart = '`+req.query.year+`' and `+req.query.type+` = '`+req.query.subtype+`' 
+                  group by locationabbr
+                  order by data_value ;`;
+      console.log(query);
+      pool.query(query,null, (error, results) => {
+        if (error) {
+          throw error
+        }
+        //(parseFloat(split_values[1])-0.1)
+        var map_data = {}
+        var fill_key = {}
+        var fillKey = split_values[0] + " - "+ (split_values[1]-0.1) ;
+        fill_key[fillKey +""] = '#e5f4d7';
+        fillKey = split_values[1] + " - "+ (split_values[2]-0.1) ;
+        fill_key[fillKey + ""] = '#A0E5A9';
+        fillKey = split_values[2] + " - "+ (split_values[3]-0.1) ;
+        fill_key[fillKey+""] = '#62D2B4';
+        fillKey = split_values[3] + " - "+ split_values[4] ;
+        fill_key[fillKey+""] = '#2B8CBE';
+        fillKey = 'defaultFill';
+        fill_key[fillKey+""] = '#999999';
+        console.log(fill_key)
+
+        results.rows.map(row => {
+          var fillKey = "";
+          var location = row.locationabbr;
+          if(parseInt(row.data_value) >= split_values[0] && parseInt(row.data_value) <= (split_values[1]-0.1) ) {
+            fillKey = split_values[0] + " - "+ (split_values[1]-0.1) ;
+            // fill_key.push({fillKey : '#e5f4d7'})
+          } else if(parseInt(row.data_value) >= split_values[1] && parseInt(row.data_value) <= (split_values[2]-0.1) ) {
+            // fillKey = '28.7 - 31.1';
+            fillKey = split_values[1] + " - "+ (split_values[2]-0.1) ;
+            // fill_key.push({fillKey : '#A0E5A9'})
+          } else if(parseInt(row.data_value) >= split_values[2] && parseInt(row.data_value) <= (split_values[3]-0.1) ) {
+            // fillKey = '31.2 - 33.6';
+            fillKey = split_values[2] + " - "+ (split_values[3]-0.1) ;
+            // fill_key.push({fillKey : '#62D2B4'})
+          } else if(parseInt(row.data_value) >= split_values[3] && parseInt(row.data_value) <= split_values[4] ) {
+            // fillKey = '33.7 - 40.6';
+            fillKey = split_values[3] + " - "+ split_values[4] ;
+            // fill_key.push({fillKey : '#2B8CBE'})
+          } else {
+            fillKey = 'defaultFill';
+            // fill_key.push({fillKey : '#999999'})
+          }
+          var data = {
+            fillKey: fillKey,
+            electoralVotes: parseInt(row.data_value),
+          };
+        /*  var state_data = {
+            location: data,
+          }*/
+          map_data[location] = data;
+        })
+        res.status(200).json(
+          { 
+            'success': true,
+            'map_records': map_data,
+            'fill_key': fill_key,
+          });
+      })
+    });
+
+    /* let query = `select locationabbr, min(data_value) as data_value from chronic
+                  where class = '`+ req.query.cat +`' 
+                  and yearstart = '`+req.query.year+`' and `+req.query.type+` = '`+req.query.subtype+`' 
+                  group by locationabbr
+                  order by data_value ;`;
+    console.log(query);
+    pool.query(query,null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      var map_data = {}
+      results.rows.map(row => {
+        var fillKey = "";
+        var location = row.locationabbr;
+        if(parseInt(row.data_value) >=20 && parseInt(row.data_value) <= 28.6 ) {
+          fillKey = '21.2 - 28.6';
+        } else if(parseInt(row.data_value) >= 28.7 && parseInt(row.data_value) <= 31.1 ) {
+          fillKey = '28.7 - 31.1';
+        } else if(parseInt(row.data_value) >= 31.2 && parseInt(row.data_value) <= 33.6 ) {
+          fillKey = '31.2 - 33.6';
+        } else if(parseInt(row.data_value) >= 33.7 && parseInt(row.data_value) <= 40.6 ) {
+          fillKey = '33.7 - 40.6';
+        } else {
+          fillKey = 'defaultFill';
+        }
+        var data = {
+          fillKey: fillKey,
+          electoralVotes: parseInt(row.data_value),
+        };
+        map_data[location] = data;
+      })
+      res.status(200).json(
+        { 
+          'success': true,
+          'map_records': map_data,
+        });
+    }) */
+
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+
+router.route('/analytics/barchart').get((req, res) => {
+  try{
+    console.log(req.body);
+    console.log(req.query);
+
+    let query = `select locationdesc as location, max(data_value) as data_value from chronic
+                  where class = '`+ req.query.cat +`' 
+                  and yearstart = '`+req.query.year+`' and `+req.query.type+` = '`+req.query.subtype+`' 
+                  group by locationdesc
+                  order by locationdesc ;`;
+    console.log(query);
+    pool.query(query,null, (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(
+        { 
+          'success': true,
+          'barchart_data': results.rows,
+        }
+      );
+    });
+
+  }
+  catch(ex) {
+    res.json({
+      error:ex.toString(),
+      'success': false
+    });
+  }
+});
+
+
 /*********************** END - ANALYTICS API **************************/
 
 async function places_api(lat,lng,rad) {
