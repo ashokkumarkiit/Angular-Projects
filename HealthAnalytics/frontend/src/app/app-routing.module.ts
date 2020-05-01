@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'exercises/:id', component: ExercisesComponent },
   { path: 'exercise/detail/:id', component: ExerciseDetailComponent },
   { path: 'covid-prediction', component: CovidPredictionComponent},
-  { path: '', redirectTo: '/workout', pathMatch: 'full' },
+  { path: '', redirectTo: '/analytics', pathMatch: 'full' },
 ];
 
 @NgModule({

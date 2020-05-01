@@ -6,6 +6,7 @@ export interface Fitness {
     name: String;
     photos_url: String;
     rating: String;
+    place_id: String;
 }
 
 export interface FitnessResponse {

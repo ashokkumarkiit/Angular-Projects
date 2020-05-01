@@ -21,3 +21,8 @@
     width: 100%;
     padding: 0;
 }
+
+.list-item-style {
+  text-decoration: none;
+  color: #333;
+}

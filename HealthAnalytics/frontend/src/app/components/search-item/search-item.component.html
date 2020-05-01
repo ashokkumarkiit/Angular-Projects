@@ -1,4 +1,4 @@
-<div>
+<div (click)="openExternalMap()">
     <table>
         <tr>
             <ng-template *ngIf="fitness.photos_url !== '' ;then imageAvailable else imageNotAvailable"></ng-template>    
@@ -23,11 +23,11 @@
                 <td style="font-size: 20px;font-weight: 300;">
                         Rating: {{fitness.rating}}
                 </td>
-            </tr>
+        </tr>
         <tr>
                 <td style="font-size: 20px;font-weight: 300;">
                         {{fitness.formatted_address}}
                 </td>
-            </tr>
+        </tr>
     </table>
 </div>
