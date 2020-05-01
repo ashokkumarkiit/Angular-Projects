@@ -1,4 +1,27 @@
+***********************************
+TOTAl LINES OF CODES
+***********************************
+Total 3180 lines of code written from scratch
+***********************************
+Frontend - 1775
+        barchart-analytics - 55
+        covid-prediction - 230
+        exercide-detail - 180
+        exercises - 50
+        health-analytics - 200
+        map-analytics - 100
+        search - 230
+        search-item - 50
+        workout - 130
+        Other Helper Classes - 170
+        app classes - 200
+        angular services - 180
+Backend - 560
+Python Scripts - 845 
+
+**************
 Instructions:- 
+**************
 The folder structure of the Health Analytics folder consists of below folders :-
 1) backend :-
         This folder consists of all the backed related code. Here all the node API is build which is communicating to the postgreSQL database.
@@ -15,11 +38,16 @@ Version -
 2) node - 12.14.1
 3) python - 3.7.4
 
+*****************************
 Credentials for PostgreSQL :-
+*****************************
 Username - postgres
 Password - root
 Database - uml_project
 
+**********************
+Project Installation :- 
+**********************
 For Backend and Frontend :- 
     For building the backend please follow the below details :- 
         1) Remove the node_modules folder from backend.
@@ -41,5 +69,16 @@ For Backend and Frontend :-
             - c3
             - datamaps
 
-Execution - 
+************
+Execution :-
+************
+Once all the dependencies have been installed for both frontend and backend, we can start below commands - 
+1) For Server - node server
+2) For Frontend - ng serve
+
+Both the backend and frontend needs to be executed.
+Backend - localhost:4000 
+Frontend - localhost:4200
+
+Note- Backend need to be started before frontend.
 

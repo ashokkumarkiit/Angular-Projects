@@ -9,29 +9,24 @@ import * as c3 from 'c3';
 })
 export class BarchartAnalyticsComponent implements OnInit {
 
-  @Input() barchart_data:AnalyticsBarchart[];
-  
+  @Input() barchart_data: AnalyticsBarchart[];
+
   constructor() { }
 
   ngOnInit() {
     this.generateBarChart();
   }
-  
+
   generateBarChart() {
-    if(document.getElementById('chart').innerHTML != null) {
-      document.getElementById('chart').innerHTML = "";
+    if (document.getElementById('chart').innerHTML != null) {
+      document.getElementById('chart').innerHTML = '';
     }
-    var chart = c3.generate({
+    const chart = c3.generate({
       bindto: '#chart',
       data: {
           type: 'bar',
           json: JSON.parse(JSON.stringify(this.barchart_data)),
-          /* json: [
-            {location: 'www.site1.com', data_value: 200},
-            {location: 'www.site2.com', data_value: 100},
-            {location: 'www.site3.com', data_value: 300},
-            {location: 'www.site4.com', data_value: 400},
-        ],*/
+
           keys: {
               x: 'location',
               value: ['data_value']
