@@ -13,7 +13,7 @@
 
 
 
-import { Component, Injectable, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component,Injectable, OnInit,Output, EventEmitter} from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 
@@ -32,7 +32,7 @@ interface Location {
   lat: number;
   lng: number;
   zoom: number;
-  address_level_1?: string;
+  address_level_1?:string;
   address_level_2?: string;
   address_country?: string;
   address_zip?: string;
@@ -62,9 +62,9 @@ export class ListOfPlacesComponent implements OnInit {
   uri = 'http://localhost:4000';
   selectedValue;
   registerView;
-  circleRadius = 3000; // km
+  circleRadius:number = 3000; // km
 
-  public location: Location = {
+  public location:Location = {
     lat: 41.882607,
     lng: -87.643548,
     label: 'You are Here',
@@ -77,12 +77,13 @@ export class ListOfPlacesComponent implements OnInit {
         width: 60,
         height: 60
       }
-  };
+    }
 
-  places: Place[] = [];
-  name_of_place = ' ';
+  places: Place[]=[];
+  name_of_place=" ";
+  
 
-  displayedColumns = ['name', 'display_phone', 'address1', 'is_closed', 'rating', 'review_count', 'Divvy'];
+  displayedColumns = ['name', 'display_phone', 'address1', 'is_closed', 'rating','review_count', 'Divvy'];
 
   constructor(private placesService: PlacesService, private router: Router, private http: HttpClient) { }
 
@@ -96,7 +97,6 @@ export class ListOfPlacesComponent implements OnInit {
 
 
   fetchPlaces() {
-    console.log('Inside List-Of-Places fetchPlaces() method');
     this.placesService
       .getPlaces()
       .subscribe((data: Place[]) => {
@@ -111,13 +111,13 @@ export class ListOfPlacesComponent implements OnInit {
     this.name_of_place = placeName;
 
 
-    for (let i = 0, len = this.places.length; i < len; i++) {
+    for (var i = 0,len = this.places.length; i < len; i++) {
 
       if ( this.places[i].name === placeName ) { // strict equality test
 
-        let place_selected =  this.places[i];
+          var place_selected =  this.places[i];
 
-        break;
+          break;
       }
     }
 

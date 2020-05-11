@@ -88,16 +88,17 @@ select max(confirmed) from (select province_state,country_region,sum(confirmed) 
 	  sum(deaths) as deaths, sum(recovered) as recovered
 	  from covid_daily_report group by country_region,province_state order by confirmed desc) as tbl
 	  
-select province_state,country_region, confirmed, deaths, recovered, lat, long_ 
+select province_state,country_region, confirmed, deaths, recovered, lat as latitude, long_ as longitude
     from covid_daily_report where (long_ != 0.0 or lat != 0.0)
     and country_region != 'US'
 	UNION
-select province_state,country_region, confirmed, deaths, recovered, lat, long_ 
+select province_state,country_region, confirmed, deaths, recovered, lat as latitude, long_ as longitude
     from covid_daily_report_us 
     where (long_ != 0.0 or lat != 0.0)
-    and country_region = 'US'
+    -- and country_region = 'US'
 	
 select province_state,sum(confirmed) as confirmed, sum(deaths) as deaths, sum(recovered) as recovered 
     from covid_daily_report_us where country_region = 'US' and upper(province_state) != upper('Recovered') 
     group by province_state order by confirmed desc;
-
+	
+select * from covid_daily_report_us;

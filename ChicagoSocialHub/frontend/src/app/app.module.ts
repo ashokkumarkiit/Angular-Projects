@@ -26,10 +26,9 @@ import { AgmCoreModule, GoogleMapsAPIWrapper } from '@agm/core';
 
 
 
-import { MatToolbarModule, MatFormFieldModule,
-    MatCheckboxModule, MatInputModule,
-    MatOptionModule, MatSelectModule, MatIconModule, MatButtonModule,
-    MatCardModule, MatTableModule, MatDividerModule, MatSnackBarModule } from '@angular/material';
+import { MatToolbarModule, MatFormFieldModule,MatCheckboxModule, MatInputModule, 
+  MatOptionModule, MatSelectModule, MatIconModule, MatButtonModule, MatCardModule, 
+  MatTableModule, MatDividerModule, MatSnackBarModule, MatProgressSpinnerModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -98,6 +97,7 @@ const routes: Routes = [
     MatTableModule,
     MatDividerModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     SatDatepickerModule,
     SatNativeDateModule,
 
@@ -117,7 +117,8 @@ const routes: Routes = [
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////
 
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyCIgk-WnRPk3W6SMK7RKFlLvgMDG_WdWPw' + '&libraries=visualization'}),
+
+    AgmCoreModule.forRoot({apiKey: 'AIzaSyCIgk-WnRPk3W6SMK7RKFlLvgMDG_WdWPw'+ '&libraries=visualization'}),
     FormsModule,
     NgbModule,
     MatCheckboxModule

@@ -12,9 +12,9 @@ export class AppComponent {
   title = 'ChicagoSocialHub-app';
   registerView;
 
-  callHomePage() {
-    console.log('called find');
-    this.registerView = 'regView2';
+  callHomePage(){
+    console.log("called find");
+    this.registerView="regView2";
     this.router.navigate(['/find']);
   }
 }

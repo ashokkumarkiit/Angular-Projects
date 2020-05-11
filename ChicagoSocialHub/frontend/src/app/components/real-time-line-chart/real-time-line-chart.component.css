@@ -22,3 +22,9 @@
     stroke: green;
     stroke-width: 1.5px;
 }
+
+.loader-position {
+    height: 100%;
+    align-content: center;
+    display: grid;
+}
