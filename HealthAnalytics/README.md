@@ -7,4 +7,4 @@ Selecting Category Obesity/ Weights , For the year 2018, View by Gender Female.
 The Choropleth map is generated as shown below. 
 
 Here the legend are also dynamically generated as per the data fetched.
-<img src="./Screenshot/1.png" width="600" height="400" />
+<img src="./screenshots/1.png" width="600" height="400" />
