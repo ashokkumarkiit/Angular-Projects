@@ -2,7 +2,7 @@
 
 COVID19 Dashboard displaying till date report country wise confirmed cases, deaths and recovered.
 
-### TAbular Report Across globe.
+### Tabular Report Across globe.
 
 <img src="./screenshots/1.png" width="700" height="400" />
 
